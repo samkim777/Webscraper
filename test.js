@@ -10,11 +10,6 @@ let a = ["a"];
 let b = ["b"];
 let c = ["c"];
 let d = ["d", "a"];
-let object_test = {
-  name: "ab",
-  Title: "doom",
-  price: "69",
-};
 
 function orderList(name, price, rating) {
   let new_list = [];
@@ -23,13 +18,13 @@ function orderList(name, price, rating) {
     new_list.push({
       Name: name[i],
       Price: price[i],
-      // How to take list and get individual elements?
-      // I'm getting a list of ratings correctly, but accessing them to assign them isn't working
+      Rating: rating[0][i],
     });
   }
   return new_list;
 }
 
+// Parameter passed in here is a list of strings
 function createOrderedList(list) {
   let new_listRating = [];
   let new_listSize = [];
@@ -40,7 +35,7 @@ function createOrderedList(list) {
   for (let j = 1; j < Object.values(list).length; j += 2) {
     new_listSize.push(Object.values(list)[j]);
   }
-  return [{ Rating: new_listRating }, { Sample_Size: new_listSize }];
+  return [new_listRating, new_listSize];
 }
 
 async function getItem() {
@@ -86,7 +81,10 @@ async function getItem() {
     itemRating.forEach((tag) => {
       // Remove any HTML syntax from the scraped HTML
       tag.remove();
-
+      // If item has no reviews, notify the user accordingly
+      if (tag == null) {
+        item_Rating.push("This item currently has no reviews");
+      }
       // Filter out any blank spaces
       if (tag.innerText !== "") {
         item_Rating.push(tag.innerText);
