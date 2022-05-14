@@ -52,7 +52,7 @@ async function getItem() {
     let item_Rating = [];
     // Grab the HTML with information on 'Product Name':
     const itemName = document.querySelectorAll(
-      ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2"
+      ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
     );
 
     // Put each list into its own array
@@ -75,32 +75,35 @@ async function getItem() {
     });
 
     const itemRating = document.querySelectorAll(
-      // Grab HTML with information on 'Total Rating' and the 'Total number of Ratings'
-      ".a-row.a-size-small [aria-label]"
+      // Grab the card that contains all information about the item
+      ".a-section.a-spacing-base"
     );
+
+    // Hmmm,, how should I solve this issue?
     itemRating.forEach((tag) => {
-      // Remove any HTML syntax from the scraped HTML
-      tag.remove();
-      // If item has no reviews, notify the user accordingly
-      if (tag == null) {
-        item_Rating.push("This item currently has no reviews");
-      }
-      // Filter out any blank spaces
-      if (tag.innerText !== "") {
-        item_Rating.push(tag.innerText);
-      }
+      const itemRatingChild = tag.querySelectorAll(
+        ".a-row.a-size-small [aria-label]"
+      );
+      itemRatingChild.forEach((child) => {
+        if (child.innerText != "" && child != null) {
+          item_Rating.push(child.innerText);
+          // Some products show twice but that's just because amazon shows the same thing twice
+        } else {
+          item_Rating.push("This item currently has no rating");
+        }
+      });
+      // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
+      // So we should ignore this class because it contains every element that I'm looking for
+      // How to ignore class?
+      // The method I'm doing here is taking all product name, price, and rating and putting them together
+      // But what if I just grab the card that contains their information, and extract it like that?
+      // ^ Should implement it like this
     });
-    return [item_Name, item_Price, item_Rating];
+
+    return item_Rating;
   });
-  console.log(
-    orderList(
-      grabItemName[0],
-      grabItemName[1],
-      createOrderedList(grabItemName[2])
-    )
-  );
+  console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
 }
 
 getItem();
-// Todo: createOrderedlist to properly spit out Ratings.

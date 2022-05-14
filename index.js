@@ -11,29 +11,31 @@ let b = ["b"];
 let c = ["c"];
 let d = ["d", "a"];
 
-function orderList(name, price, rating, size) {
+function orderList(name, price, rating) {
   let new_list = [];
+
   for (let i = 0; i < name.length; i++) {
     new_list.push({
       Name: name[i],
       Price: price[i],
-      Rating: rating[i],
-      SampleSize: size[i],
+      Rating: rating[0][i],
     });
   }
   return new_list;
 }
 
+// Parameter passed in here is a list of strings
 function createOrderedList(list) {
   let new_listRating = [];
   let new_listSize = [];
-  for (let i = 0; i < list.length; i += 2) {
-    new_listRating.push(list[i]);
+  // Debugging for looping over objects, not arrays!
+  for (let i = 0; i < Object.values(list).length; i += 2) {
+    new_listRating.push(Object.values(list)[i]);
   }
-  for (let j = 1; j < list.length; j += 2) {
-    new_listSize.push(list[j]);
+  for (let j = 1; j < Object.values(list).length; j += 2) {
+    new_listSize.push(Object.values(list)[j]);
   }
-  return [{ Rating: new_listRating }, { Sample_Size: new_listSize }];
+  return [new_listRating, new_listSize];
 }
 
 async function getItem() {
@@ -42,17 +44,17 @@ async function getItem() {
     headless: true,
   });
   const page = await browser.newPage();
-  await page.goto(
-    "https://www.amazon.ca/s?k=gaming+mouse&crid=RCE8VDKAUX4D&sprefix=%2Caps%2C1052&ref=nb_sb_noss_2"
-  );
+  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss");
 
   const grabItemName = await page.evaluate(() => {
+    let item_Name = [];
+    let item_Price = [];
+    let item_Rating = [];
     // Grab the HTML with information on 'Product Name':
     const itemName = document.querySelectorAll(
-      ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-4"
+      ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
     );
-    // Define list of item names
-    let item_Name = [];
+
     // Put each list into its own array
     itemName.forEach((name) => {
       name.remove();
@@ -64,7 +66,6 @@ async function getItem() {
     // Grab HTML with information on 'Price'
     const itemPrice = document.querySelectorAll(".a-price span.a-offscreen");
     // Define list of item names
-    let item_Price = [];
     // Put each list into its own array
     itemPrice.forEach((price) => {
       price.remove();
@@ -75,27 +76,28 @@ async function getItem() {
 
     const itemRating = document.querySelectorAll(
       // Grab HTML with information on 'Total Rating' and the 'Total number of Ratings'
-      ".a-row.a-size-small [aria-label]"
+      ".a-section.a-spacing-none.a-spacing-top-micro .a-row.a-size-small [aria-label]"
+      // Start from top-micro
+      // Grab all [aria-label] elements
+      // Check that its immediate parent is a-row
+      // So this seems to be working correctly?
     );
-    let item_Rating = [];
-    itemRating.forEach((tag) => {
-      // Remove any HTML syntax from the scraped HTML
-      tag.remove();
 
-      // Filter out any blank spaces
-      if (tag.innerText !== "") {
-        item_Rating.push(tag.innerText);
-      }
+    // Hmmm,, how should I solve this issue?
+    itemRating.forEach((tag) => {
+      item_Rating.push(tag.innerText);
     });
-    let item_List = orderList(
-      item_Name,
-      item_Price,
-      createOrderedList(item_Rating)[0],
-      createOrderedList(item_Rating)[1]
-    );
-    return item_List;
+
+    return [item_Name, item_Price, item_Rating];
   });
-  console.log(shiet);
+  console.log(
+    orderList(
+      grabItemName[0],
+      grabItemName[1],
+      createOrderedList(grabItemName[2])
+    )
+  );
   await browser.close();
 }
+
 getItem();
