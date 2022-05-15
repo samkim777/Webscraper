@@ -35,6 +35,13 @@ function createOrderedList(list) {
   for (let j = 1; j < Object.values(list).length; j += 2) {
     new_listSize.push(Object.values(list)[j]);
   }
+  // for (let k = 0; k < Object.values(list).length; k++) {
+  //   if (list[k].contains("stars")) {
+  //     new_listRating.push(Object.values(list)[k]);
+  //   } else if (typeof list[k] === 'number') {
+  //       new_listRating.push()
+  //   }
+  // }
   return [new_listRating, new_listSize];
 }
 
@@ -50,44 +57,24 @@ async function getItem() {
     let item_Name = [];
     let item_Price = [];
     let item_Rating = [];
-    // Grab the HTML with information on 'Product Name':
-    const itemName = document.querySelectorAll(
-      ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-    );
 
-    // Put each list into its own array
-    itemName.forEach((name) => {
-      name.remove();
-      if (name.innerText !== "") {
-        item_Name.push(name.innerText);
-      }
-    });
-
-    // Grab HTML with information on 'Price'
-    const itemPrice = document.querySelectorAll(".a-price span.a-offscreen");
-    // Define list of item names
-    // Put each list into its own array
-    itemPrice.forEach((price) => {
-      price.remove();
-      if (price.innerText !== "") {
-        item_Price.push(price.innerText);
-      }
-    });
-
-    const itemRating = document.querySelectorAll(
+    const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
     );
 
     // Hmmm,, how should I solve this issue?
-    itemRating.forEach((tag) => {
+    itemCard.forEach((tag) => {
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small [aria-label]"
       );
       itemRatingChild.forEach((child) => {
+        child.remove();
         if (child.innerText != "" && child != null) {
           item_Rating.push(child.innerText);
           // Some products show twice but that's just because amazon shows the same thing twice
+          // I have to change 'changeOrderList' because now it's not in pairs once the item has no rating
+          // So catch when it says no rating, and adjust the function
         } else {
           item_Rating.push("This item currently has no rating");
         }
@@ -97,10 +84,31 @@ async function getItem() {
       // How to ignore class?
       // The method I'm doing here is taking all product name, price, and rating and putting them together
       // But what if I just grab the card that contains their information, and extract it like that?
-      // ^ Should implement it like this
+      itemCard.forEach((tag) => {
+        const itemNameChild = tag.querySelectorAll(
+          ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+        );
+        itemNameChild.forEach((child_name) => {
+          child_name.remove();
+          if (child_name.innerText !== "") {
+            item_Name.push(child_name.innerText);
+          }
+        });
+      });
+      itemCard.forEach((tag) => {
+        const itemPrice = tag.querySelectorAll(".a-price span.a-offscreen");
+        // Define list of item names
+        // Put each list into its own array
+        itemPrice.forEach((price) => {
+          price.remove();
+          if (price.innerText !== "") {
+            item_Price.push(price.innerText);
+          }
+        });
+      });
     });
 
-    return item_Rating;
+    return item_Price.length;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
