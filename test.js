@@ -1,16 +1,6 @@
 // import { orderList, createOrderedList } from "./test";
 const pupeteer = require("puppeteer");
 
-// Function for taking two lists and putting them together in doubles
-// For example, ['a','b','c'] and ['c','b','a'] would return
-// [{rating: 'a', rating_size:'c'},
-// {rating:'b',rating_size:'b'},
-// {rating:'c',rating_size:'a'}]
-let a = ["a"];
-let b = ["b"];
-let c = ["c"];
-let d = ["d", "a"];
-
 function orderList(name, price, rating) {
   let new_list = [];
 
@@ -35,13 +25,6 @@ function createOrderedList(list) {
   for (let j = 1; j < Object.values(list).length; j += 2) {
     new_listSize.push(Object.values(list)[j]);
   }
-  // for (let k = 0; k < Object.values(list).length; k++) {
-  //   if (list[k].contains("stars")) {
-  //     new_listRating.push(Object.values(list)[k]);
-  //   } else if (typeof list[k] === 'number') {
-  //       new_listRating.push()
-  //   }
-  // }
   return [new_listRating, new_listSize];
 }
 
@@ -98,27 +81,21 @@ async function getItem() {
       const itemPrice = tag.querySelectorAll(".a-price");
       // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
       // @@@ currently selecting every element that has '.a-price' tag
-      // @@@ How do I filter so that only a-price is selected?
-      // todo: Filter so that only the exact class element is chosen
-
-      // e = document.getElementsByClassName("item");
-      // for (var i = 0; i < e.length; i++) {
-      //   // Only if there is only single class
-      //   if (e[i].className == "item") {
-      //     // Do something with the element e[i]
-      //     alert(e[i].className);
-      //   }
-      // } @@ Skeleton code for dealing with the issue
+      // todo: Filter so that only the exact class element is chosen ### Fixed
 
       itemPrice.forEach((price) => {
         price.remove();
-        if (price.innerText !== "") {
-          item_Price.push(price.innerText);
+        if (price.className == "a-price") {
+          // Make sure we're only selecting this exact class
+          if (price.innerText !== "") {
+            // If non-empty value, add to list
+            item_Price.push(price.innerText);
+          }
         }
       });
     });
 
-    return [item_Name, item_Price];
+    return item_Price;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
