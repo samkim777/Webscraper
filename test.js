@@ -84,31 +84,31 @@ async function getItem() {
       // How to ignore class?
       // The method I'm doing here is taking all product name, price, and rating and putting them together
       // But what if I just grab the card that contains their information, and extract it like that?
-      itemCard.forEach((tag) => {
-        const itemNameChild = tag.querySelectorAll(
-          ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-        );
-        itemNameChild.forEach((child_name) => {
-          child_name.remove();
-          if (child_name.innerText !== "") {
-            item_Name.push(child_name.innerText);
-          }
-        });
+
+      const itemNameChild = tag.querySelectorAll(
+        ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+      );
+      itemNameChild.forEach((child_name) => {
+        child_name.remove();
+        if (child_name.innerText !== "") {
+          item_Name.push(child_name.innerText);
+        }
       });
-      itemCard.forEach((tag) => {
-        const itemPrice = tag.querySelectorAll(".a-price span.a-offscreen");
-        // Define list of item names
-        // Put each list into its own array
-        itemPrice.forEach((price) => {
-          price.remove();
-          if (price.innerText !== "") {
-            item_Price.push(price.innerText);
-          }
-        });
+
+      const itemPrice = tag.querySelectorAll(".a-price");
+      // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
+      // @@@ currently selecting every element that has '.a-price' tag
+      // @@@ How do I filter so that only a-price is selected?
+      // todo: Filter so that only the exact class element is chosen
+      itemPrice.forEach((price) => {
+        price.remove();
+        if (price.innerText !== "") {
+          item_Price.push(price.innerText);
+        }
       });
     });
 
-    return item_Price.length;
+    return [item_Name, item_Price];
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
