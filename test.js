@@ -47,7 +47,9 @@ async function getItem() {
       ".a-section.a-spacing-base"
     );
 
-    // Hmmm,, how should I solve this issue?
+    // ### ONLY select ones with exact class name to filter out any javascript ad/Fillers!!
+    // TODO:
+
     itemCard.forEach((tag) => {
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small [aria-label]"
@@ -56,11 +58,10 @@ async function getItem() {
         child.remove();
         if (child.innerText != "" && child != null) {
           item_Rating.push(child.innerText);
-          // Some products show twice but that's just because amazon shows the same thing twice
-          // I have to change 'changeOrderList' because now it's not in pairs once the item has no rating
-          // So catch when it says no rating, and adjust the function
         } else {
           item_Rating.push("This item currently has no rating");
+          // @@@ Currently pushing 'no rating' even for just javascript fillers such as 'Results' and 'More results'
+          // @@@ Should filter only to catch ones related to the product card, not filler js
         }
       });
       // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
@@ -98,7 +99,7 @@ async function getItem() {
       });
     });
 
-    return item_Price;
+    return item_Rating;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
