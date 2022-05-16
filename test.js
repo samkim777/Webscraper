@@ -46,11 +46,14 @@ async function getItem() {
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
     );
+    let itemCardFiltered = Array.from(itemCard).filter(
+      (card) => card.className === "a-section a-spacing-base"
+    );
 
-    // ### ONLY select ones with exact class name to filter out any javascript ad/Fillers!!
-    // TODO:
+    // @@@ ONLY select ones with exact class name to filter out any javascript ad/Fillers!!
+    // @@@ TODO:
 
-    itemCard.forEach((tag) => {
+    itemCardFiltered.forEach((tag) => {
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small [aria-label]"
       );
@@ -62,6 +65,7 @@ async function getItem() {
           item_Rating.push("This item currently has no rating");
           // @@@ Currently pushing 'no rating' even for just javascript fillers such as 'Results' and 'More results'
           // @@@ Should filter only to catch ones related to the product card, not filler js
+          // @@@ Getting same results.. Hmm..
         }
       });
       // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
