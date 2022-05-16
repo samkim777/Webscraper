@@ -25,6 +25,7 @@ function createOrderedList(list) {
   for (let j = 1; j < Object.values(list).length; j += 2) {
     new_listSize.push(Object.values(list)[j]);
   }
+
   return [new_listRating, new_listSize];
 }
 
@@ -81,15 +82,17 @@ async function getItem() {
       const itemPrice = tag.querySelectorAll(".a-price");
       // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
       // @@@ currently selecting every element that has '.a-price' tag
+      // @@@ How do I filter so that only a-price is selected?
       // todo: Filter so that only the exact class element is chosen ### Fixed
 
       itemPrice.forEach((price) => {
         price.remove();
+        // Make sure we're only selecting this exact class
         if (price.className == "a-price") {
-          // Make sure we're only selecting this exact class
+          // If non-empty value, add to list
           if (price.innerText !== "") {
-            // If non-empty value, add to list
-            item_Price.push(price.innerText);
+            // Avoid duplicative prices
+            item_Price.push(price.firstChild.innerText);
           }
         }
       });
