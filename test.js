@@ -41,25 +41,29 @@ async function getItem() {
     let item_Name = [];
     let item_Price = [];
     let item_Rating = [];
+    let test = [];
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
+      // a-spacing-none gives exactly the same result as a-spacing-base...
     );
-    let itemCardFiltered = Array.from(itemCard).filter(
-      (card) => card.className === "a-section a-spacing-base"
+    const itemCardFiltered = Array.from(itemCard).filter(
+      (card) => !card.className.includes("a-spacing-none")
+      // @@@ This doesn't seem to do anything
     );
 
     // @@@ ONLY select ones with exact class name to filter out any javascript ad/Fillers!!
     // @@@ TODO:
 
-    itemCardFiltered.forEach((tag) => {
+    itemCard.forEach((tag) => {
+      // test.push(tag.className);
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small [aria-label]"
       );
       itemRatingChild.forEach((child) => {
         child.remove();
-        if (child.innerText != "" && child != null) {
+        if (child.innerText != "") {
           item_Rating.push(child.innerText);
         } else {
           item_Rating.push("This item currently has no rating");
@@ -68,6 +72,7 @@ async function getItem() {
           // @@@ Getting same results.. Hmm..
         }
       });
+
       // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
       // So we should ignore this class because it contains every element that I'm looking for
       // How to ignore class?
@@ -103,7 +108,7 @@ async function getItem() {
       });
     });
 
-    return item_Rating;
+    return [item_Rating, item_Name];
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
