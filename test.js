@@ -46,26 +46,28 @@ async function getItem() {
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
-      // Grabs 74 elements, 70 of which are items
-      // @@@ So I am grabbing all the items, without js crap here
+      // Grabs 72 elements, 71 of which are items
+      // @@@ Besides the one js stuff, seems to be grabbing the right things
     );
     const itemCardFiltered = Array.from(itemCard).filter(
       (card) => !card.className.includes("a-spacing-top-base")
       // @@@ This doesn't seem to do anything
     );
 
-    itemCardFiltered.forEach((tag) => {
+    itemCard.forEach((tag) => {
       // test.push(tag.className);
       const itemRatingChild = tag.querySelectorAll(
-        ".a-row.a-size-small [aria-label]"
+        ".a-row.a-size-small"
         // @@@ Does not include items w/o rating at all.
-        // @@@ This means that inside here, we don't have any items w/o rating
+        // @@@ This means that inside here, we don't have any items w/o rating, so just assign null to those
+        // @@@ With this selection I get the right items, but what are the 8 ' ' given? Why the empty string??
+        // @@ TODO: Find out why I'm getting the empty string
       );
 
       itemRatingChild.forEach((child) => {
         child.remove();
         if (child.innerText != "") {
-          item_Rating.push(child.ariaLabel);
+          item_Rating.push(child.innerText);
         } else if (child.innerText.includes("Amazon Prime")) {
           item_Rating.push("Amazon Icon");
         } else {
@@ -108,7 +110,7 @@ async function getItem() {
       });
     });
 
-    return item_Rating.length;
+    return item_Rating;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
