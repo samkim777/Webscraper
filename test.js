@@ -41,7 +41,6 @@ async function getItem() {
     let item_Name = [];
     let item_Price = [];
     let item_Rating = [];
-    let test = [];
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
@@ -63,18 +62,19 @@ async function getItem() {
         // @@@ With this selection I get the right items, but what are the 8 ' ' given? Why the empty string??
         // @@ TODO: Find out why I'm getting the empty string
       );
+      const itemRatingChildFiltered = Array.from(itemRatingChild).filter(
+        (card) => !card.className.includes("a-color-secondary")
+        // @@@ Get rid of all the non-rating related classes, such as eligibility of Prime delivery
+      );
 
-      itemRatingChild.forEach((child) => {
+      itemRatingChildFiltered.forEach((child) => {
         child.remove();
         if (child.innerText != "") {
           item_Rating.push(child.innerText);
-        } else if (child.innerText.includes("Amazon Prime")) {
-          item_Rating.push("Amazon Icon");
         } else {
-          item_Rating.push(child.innerHTML);
+          item_Rating.push("No rating");
         }
       });
-
       // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
       // So we should ignore this class because it contains every element that I'm looking for
       // How to ignore class?
