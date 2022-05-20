@@ -57,10 +57,7 @@ async function getItem() {
       // test.push(tag.className);
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small"
-        // @@@ Does not include items w/o rating at all.
-        // @@@ This means that inside here, we don't have any items w/o rating, so just assign null to those
-        // @@@ With this selection I get the right items, but what are the 8 ' ' given? Why the empty string??
-        // @@ TODO: Find out why I'm getting the empty string
+        // @@@ TODO: Debug on getting null value returned for items w/o rating
       );
       const itemRatingChildFiltered = Array.from(itemRatingChild).filter(
         (card) => !card.className.includes("a-color-secondary")
