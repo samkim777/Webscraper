@@ -49,12 +49,15 @@ async function getItem() {
       // @@@ Besides the one js stuff, seems to be grabbing the right things
     );
     const itemCardFiltered = Array.from(itemCard).filter(
-      (card) => !card.className.includes("a-spacing-top-base")
-      // @@@ This doesn't seem to do anything
+      (card) =>
+        card.lastChild.childElementCount == 4 ||
+        card.lastChild.childElementCount == 3
     );
 
     itemCard.forEach((tag) => {
-      // test.push(tag.className);
+      if (tag.lastChild.childElementCount == 3) {
+        tag.innerText = "No rating";
+      }
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small"
         // @@@ TODO: Debug on getting null value returned for items w/o rating
@@ -64,13 +67,9 @@ async function getItem() {
         // @@@ Get rid of all the non-rating related classes, such as eligibility of Prime delivery
       );
 
-      itemRatingChildFiltered.forEach((child) => {
+      itemRatingChild.forEach((child) => {
         child.remove();
-        if (child.innerText != "") {
-          item_Rating.push(child.innerText);
-        } else {
-          item_Rating.push("No rating");
-        }
+        item_Rating.push(child.innerText);
       });
       // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
       // So we should ignore this class because it contains every element that I'm looking for
@@ -107,7 +106,7 @@ async function getItem() {
       });
     });
 
-    return item_Rating;
+    return item_Rating.length;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
