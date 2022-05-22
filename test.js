@@ -1,4 +1,3 @@
-// import { orderList, createOrderedList } from "./test";
 const pupeteer = require("puppeteer");
 
 function orderList(name, price, rating) {
@@ -49,28 +48,31 @@ async function getItem() {
       // @@@ Besides the one js stuff, seems to be grabbing the right things
     );
     const itemCardFiltered = Array.from(itemCard).filter(
-      (card) =>
-        card.lastChild.childElementCount == 4 ||
-        card.lastChild.childElementCount == 3
+      (card) => !card.className.includes("s-shopping-adviser")
+      // @@@ Get rid of all the non-rating related classes, such as eligibility of Prime delivery
+      // @@@ Get rid of amazon suggestions ?
     );
 
-    itemCard.forEach((tag) => {
-      if (tag.lastChild.childElementCount == 3) {
-        tag.innerText = "No rating";
+    itemCardFiltered.forEach((tag) => {
+      if (
+        tag.lastChild.childElementCount == 3 &&
+        tag.querySelector(".a-row.a-size-small") == null // Make sure only rating missing
+      ) {
+        item_Rating.push("No rating"); // Add element without rating to the list
+      } else if (tag.lastChild.childElementCount == 4) {
+        item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
+        // Add element with rating to the list
       }
       const itemRatingChild = tag.querySelectorAll(
         ".a-row.a-size-small"
         // @@@ TODO: Debug on getting null value returned for items w/o rating
       );
-      const itemRatingChildFiltered = Array.from(itemRatingChild).filter(
-        (card) => !card.className.includes("a-color-secondary")
-        // @@@ Get rid of all the non-rating related classes, such as eligibility of Prime delivery
-      );
 
-      itemRatingChild.forEach((child) => {
-        child.remove();
-        item_Rating.push(child.innerText);
-      });
+      // itemRatingChild.forEach((child) => {
+      //   child.remove();
+      //   item_Rating.push(child.innerText);
+      // });
+
       // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
       // So we should ignore this class because it contains every element that I'm looking for
       // How to ignore class?
@@ -91,7 +93,7 @@ async function getItem() {
       // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
       // @@@ currently selecting every element that has '.a-price' tag
       // @@@ How do I filter so that only a-price is selected?
-      // todo: Filter so that only the exact class element is chosen ### Fixed
+      //  Filter so that only the exact class element is chosen ### Fixed
 
       itemPrice.forEach((price) => {
         price.remove();
@@ -106,10 +108,22 @@ async function getItem() {
       });
     });
 
-    return item_Rating.length;
+    return item_Rating;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
 }
 
 getItem();
+
+// @@@ Example of a call back
+// function myDisplayer(some) {
+//   document.getElementById("demo").innerHTML = some;
+// }
+
+// function myCalculator(num1, num2, myCallback) {
+//   let sum = num1 + num2;
+//   myCallback(sum);
+// }
+
+// myCalculator(5, 5, myDisplayer);
