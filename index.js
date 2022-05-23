@@ -1,15 +1,4 @@
-// import { orderList, createOrderedList } from "./test";
 const pupeteer = require("puppeteer");
-
-// Function for taking two lists and putting them together in doubles
-// For example, ['a','b','c'] and ['c','b','a'] would return
-// [{rating: 'a', rating_size:'c'},
-// {rating:'b',rating_size:'b'},
-// {rating:'c',rating_size:'a'}]
-let a = ["a"];
-let b = ["b"];
-let c = ["c"];
-let d = ["d", "a"];
 
 function orderList(name, price, rating) {
   let new_list = [];
@@ -35,6 +24,7 @@ function createOrderedList(list) {
   for (let j = 1; j < Object.values(list).length; j += 2) {
     new_listSize.push(Object.values(list)[j]);
   }
+
   return [new_listRating, new_listSize];
 }
 
@@ -50,53 +40,65 @@ async function getItem() {
     let item_Name = [];
     let item_Price = [];
     let item_Rating = [];
-    // Grab the HTML with information on 'Product Name':
-    const itemName = document.querySelectorAll(
-      ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+
+    const itemCard = document.querySelectorAll(
+      // Grab the card that contains all information about the item
+      ".a-section.a-spacing-base"
+    );
+    const itemCardFiltered = Array.from(itemCard).filter(
+      (card) => !card.className.includes("s-shopping-adviser")
+      // @@@ Get rid of amazon suggestions
     );
 
-    // Put each list into its own array
-    itemName.forEach((name) => {
-      name.remove();
-      if (name.innerText !== "") {
-        item_Name.push(name.innerText);
+    itemCardFiltered.forEach((tag) => {
+      if (
+        tag.lastChild.childElementCount == 3 &&
+        tag.querySelector(".a-row.a-size-small") == null // Make sure only rating missing
+      ) {
+        item_Rating.push("No rating"); // Add element without rating to the list
+      } else if (tag.lastChild.childElementCount == 4) {
+        // Get rid of '/n'
+        item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
+        // Add element with rating to the list
       }
-    });
 
-    // Grab HTML with information on 'Price'
-    const itemPrice = document.querySelectorAll(".a-price span.a-offscreen");
-    // Define list of item names
-    // Put each list into its own array
-    itemPrice.forEach((price) => {
-      price.remove();
-      if (price.innerText !== "") {
-        item_Price.push(price.innerText);
+      if (
+        tag.lastChild.childElementCount == 3 &&
+        tag.querySelector(
+          ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+        ) == null
+      ) {
+        item_Name.push("No name"); // Push Element without name to list
+      } else if (tag.lastChild.childElementCount == 4) {
+        item_Name.push(
+          tag.querySelector(
+            ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+          ).innerText
+        );
       }
+      const itemPrice = tag.querySelectorAll(".a-price");
+      // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
+      // @@@ currently selecting every element that has '.a-price' tag
+      // @@@ How do I filter so that only a-price is selected?
+      //  Filter so that only the exact class element is chosen ### Fixed
+
+      itemPrice.forEach((price) => {
+        price.remove();
+        // Make sure we're only selecting this exact class
+        if (price.className == "a-price") {
+          // If non-empty value, add to list
+          if (price.innerText !== "") {
+            // Avoid duplicative prices
+            item_Price.push(price.firstChild.innerText);
+          }
+        }
+      });
     });
 
-    const itemRating = document.querySelectorAll(
-      // Grab HTML with information on 'Total Rating' and the 'Total number of Ratings'
-      ".a-section.a-spacing-none.a-spacing-top-micro .a-row.a-size-small [aria-label]"
-      // Start from top-micro
-      // Grab all [aria-label] elements
-      // Check that its immediate parent is a-row
-      // So this seems to be working correctly?
-    );
-
-    // Hmmm,, how should I solve this issue?
-    itemRating.forEach((tag) => {
-      item_Rating.push(tag.innerText);
-    });
-
-    return [item_Name, item_Price, item_Rating];
+    return [item_Name, item_Rating];
+    // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
   });
-  console.log(
-    orderList(
-      grabItemName[0],
-      grabItemName[1],
-      createOrderedList(grabItemName[2])
-    )
-  );
+  console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
 }
 

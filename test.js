@@ -34,7 +34,9 @@ async function getItem() {
     headless: true,
   });
   const page = await browser.newPage();
-  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss");
+  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
+    waitUntil: "domcontentloaded", // Wait until dom loaded
+  });
 
   const grabItemName = await page.evaluate(() => {
     let item_Name = [];
@@ -44,55 +46,40 @@ async function getItem() {
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
-      // Grabs 72 elements, 71 of which are items
-      // @@@ Besides the one js stuff, seems to be grabbing the right things
     );
     const itemCardFiltered = Array.from(itemCard).filter(
       (card) => !card.className.includes("s-shopping-adviser")
-      // @@@ Get rid of all the non-rating related classes, such as eligibility of Prime delivery
-      // @@@ Get rid of amazon suggestions ?
+      // @@@ Get rid of amazon suggestions
     );
 
     itemCardFiltered.forEach((tag) => {
       if (
         tag.lastChild.childElementCount == 3 &&
-        tag.querySelector(".a-row.a-size-small") == null // Make sure only rating missing
+        tag.querySelector(".a-row.a-size-small") == null
+        // Make sure only rating missing
       ) {
         item_Rating.push("No rating"); // Add element without rating to the list
       } else if (tag.lastChild.childElementCount == 4) {
         item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
         // Add element with rating to the list
       }
-      const itemRatingChild = tag.querySelectorAll(
-        ".a-row.a-size-small"
-        // @@@ TODO: Debug on getting null value returned for items w/o rating
-      );
 
-      // itemRatingChild.forEach((child) => {
-      //   child.remove();
-      //   item_Rating.push(child.innerText);
-      // });
-
-      // a-section sbv-product -> These ones are pegged to advertisements, and seem to be messing up order
-      // So we should ignore this class because it contains every element that I'm looking for
-      // How to ignore class?
-      // The method I'm doing here is taking all product name, price, and rating and putting them together
-      // But what if I just grab the card that contains their information, and extract it like that?
-
-      const itemNameChild = tag.querySelectorAll(
-        ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-      );
-      itemNameChild.forEach((child_name) => {
-        child_name.remove();
-        if (child_name.innerText !== "") {
-          item_Name.push(child_name.innerText);
-        }
-      });
-
+      if (
+        tag.lastChild.childElementCount == 3 &&
+        tag.querySelector(
+          ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+        ) == null
+      ) {
+        item_Name.push("No name"); // Push Element without name to list
+      } else if (tag.lastChild.childElementCount == 4) {
+        item_Name.push(
+          tag.querySelector(
+            ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+          ).innerText
+        );
+      }
       const itemPrice = tag.querySelectorAll(".a-price");
       // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
-      // @@@ currently selecting every element that has '.a-price' tag
-      // @@@ How do I filter so that only a-price is selected?
       //  Filter so that only the exact class element is chosen ### Fixed
 
       itemPrice.forEach((price) => {
@@ -108,22 +95,12 @@ async function getItem() {
       });
     });
 
-    return item_Rating;
+    return [item_Name, item_Rating];
+    // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
+    // @@@ Todo: What's happening here? Maybe collect all elements beforehand like before?
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
 }
 
 getItem();
-
-// @@@ Example of a call back
-// function myDisplayer(some) {
-//   document.getElementById("demo").innerHTML = some;
-// }
-
-// function myCalculator(num1, num2, myCallback) {
-//   let sum = num1 + num2;
-//   myCallback(sum);
-// }
-
-// myCalculator(5, 5, myDisplayer);
