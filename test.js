@@ -2,12 +2,11 @@ const pupeteer = require("puppeteer");
 
 function orderList(name, price, rating) {
   let new_list = [];
-
   for (let i = 0; i < name.length; i++) {
     new_list.push({
       Name: name[i],
       Price: price[i],
-      Rating: rating[0][i],
+      Rating: rating[i],
     });
   }
   return new_list;
@@ -64,6 +63,7 @@ async function getItem() {
       ) {
         item_Rating.push("No rating"); // Add element without rating to the list
       } else if (tag.lastChild.childElementCount == 4) {
+        tag.remove();
         item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
         // Add element with rating to the list
       }
@@ -99,9 +99,10 @@ async function getItem() {
       });
     });
 
-    return [item_Name, item_Rating, item_Price];
+    return [{ Name: item_Name, Price: item_Price, Rating: item_Rating }];
     // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
-    // @@@ Todo: What's happening here? Maybe collect all elements beforehand like before?
+    // @@@ ##Fix: Items were not loaded
+    // @@@ Why do I have to return a list for this thing to be not null??
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
