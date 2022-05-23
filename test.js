@@ -37,6 +37,10 @@ async function getItem() {
   await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
     waitUntil: "domcontentloaded", // Wait until dom loaded
   });
+  await page.waitForSelector(".a-section.a-spacing-base", {
+    visible: true,
+    // Wait for item cards to be loaded
+  });
 
   const grabItemName = await page.evaluate(() => {
     let item_Name = [];
@@ -95,7 +99,7 @@ async function getItem() {
       });
     });
 
-    return [item_Name, item_Rating];
+    return [item_Name, item_Rating, item_Price];
     // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
     // @@@ Todo: What's happening here? Maybe collect all elements beforehand like before?
   });
