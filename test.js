@@ -45,6 +45,7 @@ async function getItem() {
     let item_Name = [];
     let item_Price = [];
     let item_Rating = [];
+    let test = [];
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
@@ -55,54 +56,17 @@ async function getItem() {
       // @@@ Get rid of amazon suggestions
     );
 
-    itemCardFiltered.forEach((tag) => {
-      if (
-        tag.lastChild.childElementCount == 3 &&
-        tag.querySelector(".a-row.a-size-small") == null
-        // Make sure only rating missing
-      ) {
-        item_Rating.push("No rating"); // Add element without rating to the list
-      } else if (tag.lastChild.childElementCount == 4) {
-        tag.remove();
-        item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
-        // Add element with rating to the list
-      }
-
-      if (
-        tag.lastChild.childElementCount == 3 &&
-        tag.querySelector(
-          ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-        ) == null
-      ) {
-        item_Name.push("No name"); // Push Element without name to list
-      } else if (tag.lastChild.childElementCount == 4) {
-        item_Name.push(
-          tag.querySelector(
-            ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-          ).innerText
-        );
-      }
-      const itemPrice = tag.querySelectorAll(".a-price");
-      // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
-      //  Filter so that only the exact class element is chosen ### Fixed
-
-      itemPrice.forEach((price) => {
-        price.remove();
-        // Make sure we're only selecting this exact class
-        if (price.className == "a-price") {
-          // If non-empty value, add to list
-          if (price.innerText !== "") {
-            // Avoid duplicative prices
-            item_Price.push(price.firstChild.innerText);
-          }
-        }
+    itemCard.forEach((tag) => {
+      test.push({
+        Name: tag.querySelector(".a-row.a-size-small").innerText,
+        Price: tag.querySelector(".a-price").innerText,
+        Rate: tag.querySelector(
+          ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+        ).innerText,
       });
     });
 
-    return [{ Name: item_Name, Price: item_Price, Rating: item_Rating }];
-    // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
-    // @@@ ##Fix: Items were not loaded
-    // @@@ Why do I have to return a list for this thing to be not null??
+    return test;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();

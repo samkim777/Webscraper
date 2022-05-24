@@ -2,12 +2,11 @@ const pupeteer = require("puppeteer");
 
 function orderList(name, price, rating) {
   let new_list = [];
-
   for (let i = 0; i < name.length; i++) {
     new_list.push({
       Name: name[i],
       Price: price[i],
-      Rating: rating[0][i],
+      Rating: rating[i],
     });
   }
   return new_list;
@@ -34,7 +33,13 @@ async function getItem() {
     headless: true,
   });
   const page = await browser.newPage();
-  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss");
+  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
+    waitUntil: "domcontentloaded", // Wait until dom loaded
+  });
+  await page.waitForSelector(".a-section.a-spacing-base", {
+    visible: true,
+    // Wait for item cards to be loaded
+  });
 
   const grabItemName = await page.evaluate(() => {
     let item_Name = [];
@@ -53,11 +58,12 @@ async function getItem() {
     itemCardFiltered.forEach((tag) => {
       if (
         tag.lastChild.childElementCount == 3 &&
-        tag.querySelector(".a-row.a-size-small") == null // Make sure only rating missing
+        tag.querySelector(".a-row.a-size-small") == null
+        // Make sure only rating missing
       ) {
         item_Rating.push("No rating"); // Add element without rating to the list
       } else if (tag.lastChild.childElementCount == 4) {
-        // Get rid of '/n'
+        tag.remove();
         item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
         // Add element with rating to the list
       }
@@ -78,8 +84,6 @@ async function getItem() {
       }
       const itemPrice = tag.querySelectorAll(".a-price");
       // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
-      // @@@ currently selecting every element that has '.a-price' tag
-      // @@@ How do I filter so that only a-price is selected?
       //  Filter so that only the exact class element is chosen ### Fixed
 
       itemPrice.forEach((price) => {
@@ -94,9 +98,14 @@ async function getItem() {
         }
       });
     });
+    const result = orderList(item_Name, item_Price, item_Rating);
+    const test = [];
 
-    return [item_Name, item_Rating];
+    return [result];
     // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
+    // @@@ ##Fix: Items were not loaded
+    // @@@ Why do I have to return a list for this thing to be not null??
+    // Using map?
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
