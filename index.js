@@ -33,9 +33,12 @@ async function getItem() {
     headless: true,
   });
   const page = await browser.newPage();
-  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
-    waitUntil: "domcontentloaded", // Wait until dom loaded
-  });
+  await page.goto(
+    "https://www.amazon.ca/s?k=gaming+mouse&s=price-desc-rank&page=2&qid=1653361640&ref=sr_pg_2",
+    {
+      waitUntil: "domcontentloaded", // Wait until dom loaded
+    }
+  );
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
     // Wait for item cards to be loaded
@@ -68,20 +71,20 @@ async function getItem() {
         // Add element with rating to the list
       }
 
-      if (
-        tag.lastChild.childElementCount == 3 &&
-        tag.querySelector(
-          ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-        ) == null
-      ) {
-        item_Name.push("No name"); // Push Element without name to list
-      } else if (tag.lastChild.childElementCount == 4) {
-        item_Name.push(
-          tag.querySelector(
-            ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-          ).innerText
-        );
-      }
+      // if (
+      //   tag.lastChild.childElementCount == 3 &&
+      //   tag.querySelector(
+      //     ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+      //   ) == null
+      // ) {
+      //   item_Name.push("No name"); // Push Element without name to list
+      // } else if (tag.lastChild.childElementCount == 4) {
+      //   item_Name.push(
+      //     tag.querySelector(
+      //       ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
+      //     ).innerText
+      //   );
+      // }
       const itemPrice = tag.querySelectorAll(".a-price");
       // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
       //  Filter so that only the exact class element is chosen ### Fixed
@@ -98,10 +101,9 @@ async function getItem() {
         }
       });
     });
-    const result = orderList(item_Name, item_Price, item_Rating);
     const test = [];
 
-    return [result];
+    return item_Rating;
     // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
     // @@@ ##Fix: Items were not loaded
     // @@@ Why do I have to return a list for this thing to be not null??

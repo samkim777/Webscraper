@@ -61,12 +61,28 @@ async function getItem() {
 
     itemCardFiltered.forEach((tag) => {
       tag.remove();
-      test.push({
-        Name: tag.querySelector(
+      let item_name_null =
+        tag.querySelector(
           ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-        ).innerText,
-        Rating: tag.querySelector(".a-row.a-size-small").innerText,
-        Price: tag.querySelector(".a-price").firstChild.innerText,
+        ) == null;
+      let item_price_null = tag.querySelector(".a-price") == null;
+      let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
+
+      // @@@TODO: How do I make sure that I only assign to object when it's not null?
+      // @@@ -> Use ternary operator
+      test.push({
+        // Ternary operator uses first value as truthy, second as falsy
+        Name: item_name_null
+          ? "No name for this item"
+          : tag.querySelector(
+              ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+            ).innerText,
+        Rating: item_rating_null
+          ? "No rating for this item"
+          : tag.querySelector(".a-row.a-size-small").innerText,
+        Price: item_price_null
+          ? "No price for this item"
+          : tag.querySelector(".a-price").firstChild.innerText,
       });
     });
 
