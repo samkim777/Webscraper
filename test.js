@@ -33,9 +33,12 @@ async function getItem() {
     headless: true,
   });
   const page = await browser.newPage();
-  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
-    waitUntil: "domcontentloaded", // Wait until dom loaded
-  });
+  await page.goto(
+    "https://www.amazon.ca/s?k=gaming+mouse&s=price-desc-rank&qid=1653360986&ref=sr_st_price-desc-rank",
+    {
+      waitUntil: "domcontentloaded", // Wait until dom loaded
+    }
+  );
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
     // Wait for item cards to be loaded
@@ -56,13 +59,14 @@ async function getItem() {
       // @@@ Get rid of amazon suggestions
     );
 
-    itemCard.forEach((tag) => {
+    itemCardFiltered.forEach((tag) => {
+      tag.remove();
       test.push({
-        Name: tag.querySelector(".a-row.a-size-small").innerText,
-        Price: tag.querySelector(".a-price").innerText,
-        Rate: tag.querySelector(
+        Name: tag.querySelector(
           ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
         ).innerText,
+        Rating: tag.querySelector(".a-row.a-size-small").innerText,
+        Price: tag.querySelector(".a-price").firstChild.innerText,
       });
     });
 
