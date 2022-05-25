@@ -34,7 +34,7 @@ async function getItem() {
   });
   const page = await browser.newPage();
   await page.goto(
-    "https://www.amazon.ca/s?k=gaming+mouse&s=price-desc-rank&qid=1653360986&ref=sr_st_price-desc-rank",
+    "https://www.amazon.ca/s?k=gaming+mouse&crid=2JTGO38LHUJ2M&sprefix=gaming+mou%2Caps%2C430&ref=nb_sb_noss_2",
     {
       waitUntil: "domcontentloaded", // Wait until dom loaded
     }
@@ -45,9 +45,6 @@ async function getItem() {
   });
 
   const grabItemName = await page.evaluate(() => {
-    let item_Name = [];
-    let item_Price = [];
-    let item_Rating = [];
     let test = [];
 
     const itemCard = document.querySelectorAll(
@@ -68,8 +65,6 @@ async function getItem() {
       let item_price_null = tag.querySelector(".a-price") == null;
       let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
-      // @@@TODO: How do I make sure that I only assign to object when it's not null?
-      // @@@ -> Use ternary operator
       test.push({
         // Ternary operator uses first value as truthy, second as falsy
         Name: item_name_null
@@ -85,6 +80,7 @@ async function getItem() {
           : tag.querySelector(".a-price").firstChild.innerText,
       });
     });
+    // @@@ TODO: Now extract data from the objects, and then do analysis to find best item
 
     return test;
   });
