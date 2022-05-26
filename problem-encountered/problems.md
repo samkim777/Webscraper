@@ -10,6 +10,12 @@
     ### - ** Price Sensitivity**: The higher the price of an item is, the more sensitive its star rating to change.
 
     ### - ** Time frame variability **: If an item has changed price due to an external factor - such as seasonal demand of air conditioners rising during summer - then this affects the review of the item. It could be subject to harsher reviews when its price is higher, and vice-versa, more lenient reviews when the price is deducted. So the history of prices is an important factor.
+     -  In 2015, Amazon changed its rating calculation to add more weight to certain reviews. Verified users
+     are weighted more 'important'
+     [https://www.feedbackwhiz.com/blog/how-does-amazon-calculate-product-ratings/]
+     ** With the bimodal parent distribution, a sample size of 30 may be sufficient enough to invoke the CLT.
+     CLT: Distriution approximately normal with sufficient sample size
+     [https://www.umass.edu/remp/Papers/Smith&Wells_NERA06.pdf]
 
     ### More to come...
 

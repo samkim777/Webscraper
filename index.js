@@ -86,6 +86,12 @@ async function getItem() {
     // const ratingStar = text.split(" ",1);
     // const sampleSize = text.slice(18,text.length).replace(/,/g, '');
 
+    // @@@ Because amazon reviews are mostly bimodal, and not TOO extremely skewed, we will assume that the
+    // @@@ sufficient sample size where we can have confidence in its star rating to be 200, as per the
+    // @@@ paper. Considering that a sample size of 30 can be trust worthy in most bimodal distribution tests,
+    // @@@ 200 covers pretty much 100% of the distributions we will encounter.
+    // @@@ TODO: Filter out those with less than 200 ratings.
+
     return products;
   });
   console.dir(grabItemName, { maxArrayLength: null });
