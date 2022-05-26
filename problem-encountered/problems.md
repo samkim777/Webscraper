@@ -1,4 +1,4 @@
-# -\* What statistical inference could a buyer conclude from an item's rating and the number of ratings that it has received?
+#  What statistical inference could a buyer conclude from an item's rating and the number of ratings that it has received?
 
 ## - Factors:
 
