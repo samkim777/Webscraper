@@ -34,7 +34,7 @@ async function getItem() {
   });
   const page = await browser.newPage();
   await page.goto(
-    "https://www.amazon.ca/s?k=gaming+mouse&s=price-desc-rank&page=2&qid=1653361640&ref=sr_pg_2",
+    "https://www.amazon.ca/s?k=gaming+mouse&crid=2JTGO38LHUJ2M&sprefix=gaming+mou%2Caps%2C430&ref=nb_sb_noss_2",
     {
       waitUntil: "domcontentloaded", // Wait until dom loaded
     }
@@ -45,9 +45,7 @@ async function getItem() {
   });
 
   const grabItemName = await page.evaluate(() => {
-    let item_Name = [];
-    let item_Price = [];
-    let item_Rating = [];
+    let products = [];
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
@@ -59,55 +57,36 @@ async function getItem() {
     );
 
     itemCardFiltered.forEach((tag) => {
-      if (
-        tag.lastChild.childElementCount == 3 &&
-        tag.querySelector(".a-row.a-size-small") == null
-        // Make sure only rating missing
-      ) {
-        item_Rating.push("No rating"); // Add element without rating to the list
-      } else if (tag.lastChild.childElementCount == 4) {
-        tag.remove();
-        item_Rating.push(tag.querySelector(".a-row.a-size-small").innerText);
-        // Add element with rating to the list
-      }
+      tag.remove();
+      let item_name_null =
+        tag.querySelector(
+          ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+        ) == null;
+      let item_price_null = tag.querySelector(".a-price") == null;
+      let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
-      // if (
-      //   tag.lastChild.childElementCount == 3 &&
-      //   tag.querySelector(
-      //     ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-      //   ) == null
-      // ) {
-      //   item_Name.push("No name"); // Push Element without name to list
-      // } else if (tag.lastChild.childElementCount == 4) {
-      //   item_Name.push(
-      //     tag.querySelector(
-      //       ".a-size-mini.a-spacing-none.a-color-base.s-line-clamp-3"
-      //     ).innerText
-      //   );
-      // }
-      const itemPrice = tag.querySelectorAll(".a-price");
-      // @@@ Price needs to collect only current prices, not the 'was' prices as it is doing now
-      //  Filter so that only the exact class element is chosen ### Fixed
-
-      itemPrice.forEach((price) => {
-        price.remove();
-        // Make sure we're only selecting this exact class
-        if (price.className == "a-price") {
-          // If non-empty value, add to list
-          if (price.innerText !== "") {
-            // Avoid duplicative prices
-            item_Price.push(price.firstChild.innerText);
-          }
-        }
+      products.push({
+        // Ternary operator uses first value as truthy, second as falsy
+        Name: item_name_null
+          ? "No name for this item"
+          : tag.querySelector(
+              ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+            ).innerText,
+        Rating: item_rating_null
+          ? "No rating for this item"
+          : tag.querySelector(".a-row.a-size-small").innerText,
+        Price: item_price_null
+          ? "No price for this item"
+          : // Get rid of duplicate prices with firstChild
+            tag.querySelector(".a-price").firstChild.innerText,
       });
     });
-    const test = [];
+    // @@@ Sample code for getting sample size
+    // let text = "4.5 out of 5 stars 1,558 ";
+    // const ratingStar = text.split(" ",1);
+    // const sampleSize = text.slice(18,text.length).replace(/,/g, '');
 
-    return item_Rating;
-    // @@@ Returning two things seem to mess somethiing up: innerText getting set to null?
-    // @@@ ##Fix: Items were not loaded
-    // @@@ Why do I have to return a list for this thing to be not null??
-    // Using map?
+    return products;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();

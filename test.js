@@ -45,7 +45,7 @@ async function getItem() {
   });
 
   const grabItemName = await page.evaluate(() => {
-    let test = [];
+    let products = [];
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
@@ -65,7 +65,7 @@ async function getItem() {
       let item_price_null = tag.querySelector(".a-price") == null;
       let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
-      test.push({
+      products.push({
         // Ternary operator uses first value as truthy, second as falsy
         Name: item_name_null
           ? "No name for this item"
@@ -77,12 +77,16 @@ async function getItem() {
           : tag.querySelector(".a-row.a-size-small").innerText,
         Price: item_price_null
           ? "No price for this item"
-          : tag.querySelector(".a-price").firstChild.innerText,
+          : // Get rid of duplicate prices with firstChild
+            tag.querySelector(".a-price").firstChild.innerText,
       });
     });
-    // @@@ TODO: Now extract data from the objects, and then do analysis to find best item
+    // @@@ Sample code for getting sample size
+    // let text = "4.5 out of 5 stars 1,558 ";
+    // const ratingStar = text.split(" ",1);
+    // const sampleSize = text.slice(18,text.length).replace(/,/g, '');
 
-    return test;
+    return products;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
