@@ -90,7 +90,7 @@ async function getItem() {
     // @@@ sufficient sample size where we can have confidence in its star rating to be 200, as per the
     // @@@ paper. Considering that a sample size of 30 can be trust worthy in most bimodal distribution tests,
     // @@@ 200 covers pretty much 100% of the distributions we will encounter.
-    // @@@ TODO: Filter out those with less than 200 ratings.
+    // @@@ TODO: Condition 1: Filter out those with less than 200 ratings.
 
     return products;
   });
