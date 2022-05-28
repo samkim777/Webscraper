@@ -18,12 +18,22 @@
 CLT: Distriution approximately normal with sufficient sample size
 [https://www.umass.edu/remp/Papers/Smith&Wells_NERA06.pdf]
 
-## Factors to be considered:
+## Factors to be considered in this project:
 
-### Sample size < 200, star rating >= 4.5 -> 2-3 negative reviews
+### Filter condition:
 
-### More to come...
+#### 1. Item rating sample size < 200
 
-###### Source: https://www.qualtrics.com/blog/online-review-stats/,
+#### 2. Item star rating < 4
+
+#### 3. Top (maximum) 10 items with highest sample size & rating will be given to the user
+
+##### If no items can satisify all such conditions, it may be better to search other shopping platforms for that item
+
+###### Sources: https://www.qualtrics.com/blog/online-review-stats/,
 
 ###### https://www.tandfonline.com/doi/abs/10.1080/02642069.2010.529436
+
+###### https://www.colorado.edu/business/sites/default/files/attached-files/jcr_2016_de_langhe_fernbach_lichtenstein_0.pdf
+
+###### https://fivethirtyeight.com/features/yelp-and-michelin-have-the-same-taste-in-new-york-restaurants/
