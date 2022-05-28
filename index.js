@@ -81,6 +81,16 @@ async function getItem() {
             tag.querySelector(".a-price").firstChild.innerText,
       });
     });
+    // @@@ Removing items with rating less than 4
+    // @@@
+    for (let i = 0; i < products.length; i++) {
+      if (products.indexOf(products[i]) != -1) {
+        if (parseFloat(products[i].Rating.split(" ", 1)) < 4) {
+          products.splice(products.indexOf(products[i]), 1);
+        }
+      }
+    }
+
     // @@@ Sample code for getting sample size
     // let text = "4.5 out of 5 stars 1,558 ";
     // const ratingStar = text.split(" ",1);
