@@ -82,10 +82,19 @@ async function getItem() {
       });
     });
     // @@@ Removing items with rating less than 4
-    // @@@
+    // @@@ TODO: Remove items with rating size < 200
+    // @@@ Then take the list and calculate 95% CI
     for (let i = 0; i < products.length; i++) {
       if (products.indexOf(products[i]) != -1) {
-        if (parseFloat(products[i].Rating.split(" ", 1)) < 4) {
+        if (
+          parseFloat(products[i].Rating.split(" ", 1)) < 4 ||
+          parseInt(
+            products[i].Rating.substr(20, products[i].Rating.length).replace(
+              /,/g,
+              ""
+            )
+          ) < 200
+        ) {
           products.splice(products.indexOf(products[i]), 1);
         }
       }
