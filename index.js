@@ -4,7 +4,6 @@ const pupeteer = require("puppeteer");
 function createOrderedList(list) {
   let new_listRating = [];
   let new_listSize = [];
-  // Debugging for looping over objects, not arrays!
   for (let i = 0; i < Object.values(list).length; i += 2) {
     new_listRating.push(Object.values(list)[i]);
   }
