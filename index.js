@@ -1,15 +1,10 @@
 const pupeteer = require("puppeteer");
 
-function orderList(name, price, rating) {
-  let new_list = [];
-  for (let i = 0; i < name.length; i++) {
-    new_list.push({
-      Name: name[i],
-      Price: price[i],
-      Rating: rating[i],
-    });
-  }
-  return new_list;
+function getItemFilter(productList) {
+  // @@@ Removing items with rating less than 4 [Check]
+  // @@@ TODO: Remove items with rating size < 200 [Debug]
+  // @@@ Then take the list and calculate 95% CI
+  // Objects are filtered differently
 }
 
 // Parameter passed in here is a list of strings
@@ -33,12 +28,9 @@ async function getItem() {
     headless: true,
   });
   const page = await browser.newPage();
-  await page.goto(
-    "https://www.amazon.ca/s?k=gaming+mouse&crid=2JTGO38LHUJ2M&sprefix=gaming+mou%2Caps%2C430&ref=nb_sb_noss_2",
-    {
-      waitUntil: "domcontentloaded", // Wait until dom loaded
-    }
-  );
+  await page.goto("https://www.amazon.ca/s?k=pen&ref=nb_sb_noss", {
+    waitUntil: "domcontentloaded", // Wait until dom loaded
+  });
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
     // Wait for item cards to be loaded
@@ -81,24 +73,13 @@ async function getItem() {
             tag.querySelector(".a-price").firstChild.innerText,
       });
     });
-    // @@@ Removing items with rating less than 4
-    // @@@ TODO: Remove items with rating size < 200
-    // @@@ Then take the list and calculate 95% CI
-    for (let i = 0; i < products.length; i++) {
-      if (products.indexOf(products[i]) != -1) {
-        if (
-          parseFloat(products[i].Rating.split(" ", 1)) < 4 ||
-          parseInt(
-            products[i].Rating.substr(20, products[i].Rating.length).replace(
-              /,/g,
-              ""
-            )
-          ) < 200
-        ) {
-          products.splice(products.indexOf(products[i]), 1);
-        }
-      }
-    }
+    const filtered = products.filter(function (items) {
+      return (
+        parseInt(
+          items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
+        ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
+      );
+    });
 
     // @@@ Sample code for getting sample size
     // let text = "4.5 out of 5 stars 1,558 ";
@@ -111,7 +92,7 @@ async function getItem() {
     // @@@ 200 covers pretty much 100% of the distributions we will encounter.
     // @@@ TODO: Condition 1: Filter out those with less than 200 ratings.
 
-    return products;
+    return filtered;
   });
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
