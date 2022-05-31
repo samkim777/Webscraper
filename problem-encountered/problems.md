@@ -28,9 +28,9 @@ CLT: Distriution approximately normal with sufficient sample size
 
 #### 3. Top (maximum) 10 items with highest sample size & rating will be given to the user
 
-#### 4. Items will be given a 95% confidence interval for the item's star rating, which will aid in consumer's purchase choice.
+#### \*4. Items will be given a 95% confidence interval for the item's star rating, which will aid in consumer's purchase choice.[Feat]
 
-##### If no items can satisify all such conditions, it may be better to search other shopping platforms for that item
+##### If no items can satisify all such conditions, it may be better to search other shopping platforms for that item, or perhaps give the user some less strictly conditioned items [Feat]
 
 ###### Sources: https://www.qualtrics.com/blog/online-review-stats/,
 

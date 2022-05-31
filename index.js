@@ -1,12 +1,5 @@
 const pupeteer = require("puppeteer");
 
-function getItemFilter(productList) {
-  // @@@ Removing items with rating less than 4 [Check]
-  // @@@ TODO: Remove items with rating size < 200 [Debug]
-  // @@@ Then take the list and calculate 95% CI
-  // Objects are filtered differently
-}
-
 // Parameter passed in here is a list of strings
 function createOrderedList(list) {
   let new_listRating = [];
@@ -80,11 +73,6 @@ async function getItem() {
         ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
       );
     });
-
-    // @@@ Sample code for getting sample size
-    // let text = "4.5 out of 5 stars 1,558 ";
-    // const ratingStar = text.split(" ",1);
-    // const sampleSize = text.slice(18,text.length).replace(/,/g, '');
 
     // @@@ Because amazon reviews are mostly bimodal, and not TOO extremely skewed, we will assume that the
     // @@@ sufficient sample size where we can have confidence in its star rating to be 200, as per the
