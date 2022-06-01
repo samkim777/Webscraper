@@ -33,38 +33,39 @@ async function getItem() {
     const button = document.querySelector(
       ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
     );
-    button.click();
 
     const itemCardFiltered = Array.from(itemCard).filter(
       (card) => !card.className.includes("s-shopping-adviser")
       // Get rid of amazon suggestions b/c we don't trust Mr Bezos
     );
+    while (button != null) {
+      itemCardFiltered.forEach((tag) => {
+        tag.remove();
+        let item_name_null =
+          tag.querySelector(
+            ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+          ) == null;
+        let item_price_null = tag.querySelector(".a-price") == null;
+        let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
-    itemCardFiltered.forEach((tag) => {
-      tag.remove();
-      let item_name_null =
-        tag.querySelector(
-          ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-        ) == null;
-      let item_price_null = tag.querySelector(".a-price") == null;
-      let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
-
-      products.push({
-        // Ternary operator for when an element is null, else give value
-        Name: item_name_null
-          ? "No name for this item"
-          : tag.querySelector(
-              ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-            ).innerText,
-        Rating: item_rating_null
-          ? "No rating for this item"
-          : tag.querySelector(".a-row.a-size-small").innerText,
-        Price: item_price_null
-          ? "No price for this item"
-          : // Get rid of duplicate prices with firstChild
-            tag.querySelector(".a-price").firstChild.innerText,
+        products.push({
+          // Ternary operator for when an element is null, else give value
+          Name: item_name_null
+            ? "No name for this item"
+            : tag.querySelector(
+                ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+              ).innerText,
+          Rating: item_rating_null
+            ? "No rating for this item"
+            : tag.querySelector(".a-row.a-size-small").innerText,
+          Price: item_price_null
+            ? "No price for this item"
+            : // Get rid of duplicate prices with firstChild
+              tag.querySelector(".a-price").firstChild.innerText,
+        });
       });
-    });
+      button.click({ delay: Math.random() * 10000 });
+    }
 
     const filtered_products = products.filter(function (items) {
       return (
@@ -77,7 +78,7 @@ async function getItem() {
     return filtered_products;
   });
   console.dir(grabItemName, { maxArrayLength: null });
-  // await browser.close();
+  await browser.close();
 }
 
 getItem();
