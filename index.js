@@ -1,32 +1,26 @@
+const { next } = require("cheerio/lib/api/traversing");
 const pupeteer = require("puppeteer");
-
-// Parameter passed in here is a list of strings
-function createOrderedList(list) {
-  let new_listRating = [];
-  let new_listSize = [];
-  for (let i = 0; i < Object.values(list).length; i += 2) {
-    new_listRating.push(Object.values(list)[i]);
-  }
-  for (let j = 1; j < Object.values(list).length; j += 2) {
-    new_listSize.push(Object.values(list)[j]);
-  }
-
-  return [new_listRating, new_listSize];
-}
 
 async function getItem() {
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
-    headless: true,
+    headless: false,
   });
   const page = await browser.newPage();
-  await page.goto("https://www.amazon.ca/s?k=pen&ref=nb_sb_noss", {
+
+  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
     waitUntil: "domcontentloaded", // Wait until dom loaded
   });
+
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
     // Wait for item cards to be loaded
   });
+  // @@@TODO: Scrap all pages, Give images & links to user, Display information in a nice way [React? On a webpage?]
+  // @@@ When scraping, gotta add delays
+  // s-pagination-item s-pagination-next s-pagination-disabled  -> When the 'Next' button is disabled,
+  // meaning no more items are avaliable
+  //s-pagination-item s-pagination-next s-pagination-button s-pagination-separator -> When 'Next' button enabled
 
   const grabItemName = await page.evaluate(() => {
     let products = [];
@@ -35,9 +29,15 @@ async function getItem() {
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
     );
+    // @@@ Works for clicking next button
+    const button = document.querySelector(
+      ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
+    );
+    button.click();
+
     const itemCardFiltered = Array.from(itemCard).filter(
       (card) => !card.className.includes("s-shopping-adviser")
-      // @@@ Get rid of amazon suggestions
+      // Get rid of amazon suggestions b/c we don't trust Mr Bezos
     );
 
     itemCardFiltered.forEach((tag) => {
@@ -50,7 +50,7 @@ async function getItem() {
       let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
       products.push({
-        // Ternary operator uses first value as truthy, second as falsy
+        // Ternary operator for when an element is null, else give value
         Name: item_name_null
           ? "No name for this item"
           : tag.querySelector(
@@ -65,7 +65,8 @@ async function getItem() {
             tag.querySelector(".a-price").firstChild.innerText,
       });
     });
-    const filtered = products.filter(function (items) {
+
+    const filtered_products = products.filter(function (items) {
       return (
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
@@ -73,16 +74,10 @@ async function getItem() {
       );
     });
 
-    // @@@ Because amazon reviews are mostly bimodal, and not TOO extremely skewed, we will assume that the
-    // @@@ sufficient sample size where we can have confidence in its star rating to be 200, as per the
-    // @@@ paper. Considering that a sample size of 30 can be trust worthy in most bimodal distribution tests,
-    // @@@ 200 covers pretty much 100% of the distributions we will encounter.
-    // @@@ TODO: Condition 1: Filter out those with less than 200 ratings.
-
-    return filtered;
+    return filtered_products;
   });
   console.dir(grabItemName, { maxArrayLength: null });
-  await browser.close();
+  // await browser.close();
 }
 
 getItem();
