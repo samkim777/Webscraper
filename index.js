@@ -1,4 +1,3 @@
-const { next } = require("cheerio/lib/api/traversing");
 const pupeteer = require("puppeteer");
 
 async function getItem() {
@@ -17,10 +16,10 @@ async function getItem() {
     // Wait for item cards to be loaded
   });
   // @@@TODO: Scrap all pages, Give images & links to user, Display information in a nice way [React? On a webpage?]
-  // @@@ When scraping, gotta add delays
-  // s-pagination-item s-pagination-next s-pagination-disabled  -> When the 'Next' button is disabled,
-  // meaning no more items are avaliable
-  //s-pagination-item s-pagination-next s-pagination-button s-pagination-separator -> When 'Next' button enabled
+
+  await page.waitForSelector(".s-pagination-item.s-pagination-disabled", {
+    timeout: 4000,
+  }); // Wait for button text
 
   const grabItemName = await page.evaluate(() => {
     let products = [];
@@ -33,12 +32,15 @@ async function getItem() {
     const button = document.querySelector(
       ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
     );
+    for (let i = 0; i < 3; i++) {
+      button.click({ timeout: 10000 });
+      const itemCardFiltered = Array.from(itemCard).filter(
+        (card) => !card.className.includes("s-shopping-adviser")
+        // Get rid of amazon suggestions b/c we don't trust Mr Bezos
+      );
+      // s-pagination-item s-pagination-disabled.innerText -> maximum number of pages for this item
+      // TODO:
 
-    const itemCardFiltered = Array.from(itemCard).filter(
-      (card) => !card.className.includes("s-shopping-adviser")
-      // Get rid of amazon suggestions b/c we don't trust Mr Bezos
-    );
-    while (button != null) {
       itemCardFiltered.forEach((tag) => {
         tag.remove();
         let item_name_null =
@@ -64,7 +66,6 @@ async function getItem() {
               tag.querySelector(".a-price").firstChild.innerText,
         });
       });
-      button.click({ delay: Math.random() * 10000 });
     }
 
     const filtered_products = products.filter(function (items) {
@@ -77,8 +78,8 @@ async function getItem() {
 
     return filtered_products;
   });
+
   console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
 }
-
 getItem();
