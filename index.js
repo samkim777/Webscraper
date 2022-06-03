@@ -3,13 +3,16 @@ const pupeteer = require("puppeteer");
 async function getItem() {
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
-    headless: false,
+    headless: true,
   });
   const page = await browser.newPage();
 
-  await page.goto("https://www.amazon.ca/s?k=gaming+mouse&ref=nb_sb_noss", {
-    waitUntil: "domcontentloaded", // Wait until dom loaded
-  });
+  await page.goto(
+    "https://www.amazon.ca/s?k=gaming+mouse&page=3&qid=1654220875&ref=sr_pg_3",
+    {
+      waitUntil: "domcontentloaded", // Wait until dom loaded
+    }
+  );
 
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
@@ -21,7 +24,7 @@ async function getItem() {
     timeout: 4000,
   }); // Wait for button text
 
-  // @@@ Perhaps just iterate the different urls until code 404?
+  // @@@ Perhaps just iterate the different urls until code 404 -->
 
   grabItemName = await page.evaluate(() => {
     let products = [];
