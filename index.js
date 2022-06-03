@@ -21,52 +21,51 @@ async function getItem() {
     timeout: 4000,
   }); // Wait for button text
 
-  const grabItemName = await page.evaluate(() => {
+  // @@@ Perhaps just iterate the different urls until code 404?
+
+  grabItemName = await page.evaluate(() => {
     let products = [];
+    const button = document.querySelector(
+      ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
+    );
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
       ".a-section.a-spacing-base"
     );
-    // @@@ Works for clicking next button
-    const button = document.querySelector(
-      ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
+
+    const itemCardFiltered = Array.from(itemCard).filter(
+      (card) => !card.className.includes("s-shopping-adviser")
+      // Get rid of amazon suggestions b/c we don't trust Mr Bezos
     );
-    for (let i = 0; i < 3; i++) {
-      button.click({ timeout: 10000 });
-      const itemCardFiltered = Array.from(itemCard).filter(
-        (card) => !card.className.includes("s-shopping-adviser")
-        // Get rid of amazon suggestions b/c we don't trust Mr Bezos
-      );
-      // s-pagination-item s-pagination-disabled.innerText -> maximum number of pages for this item
-      // TODO:
+    // s-pagination-item s-pagination-disabled.innerText -> maximum number of pages for this item
+    // TODO:
 
-      itemCardFiltered.forEach((tag) => {
-        tag.remove();
-        let item_name_null =
-          tag.querySelector(
-            ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-          ) == null;
-        let item_price_null = tag.querySelector(".a-price") == null;
-        let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
+    itemCardFiltered.forEach((tag) => {
+      tag.remove();
+      let item_name_null =
+        tag.querySelector(
+          ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+        ) == null;
+      let item_price_null = tag.querySelector(".a-price") == null;
+      let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
-        products.push({
-          // Ternary operator for when an element is null, else give value
-          Name: item_name_null
-            ? "No name for this item"
-            : tag.querySelector(
-                ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-              ).innerText,
-          Rating: item_rating_null
-            ? "No rating for this item"
-            : tag.querySelector(".a-row.a-size-small").innerText,
-          Price: item_price_null
-            ? "No price for this item"
-            : // Get rid of duplicate prices with firstChild
-              tag.querySelector(".a-price").firstChild.innerText,
-        });
+      products.push({
+        // Ternary operator for when an element is null, else give value
+        Name: item_name_null
+          ? "No name for this item"
+          : tag.querySelector(
+              ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+            ).innerText,
+        Rating: item_rating_null
+          ? "No rating for this item"
+          : tag.querySelector(".a-row.a-size-small").innerText,
+        Price: item_price_null
+          ? "No price for this item"
+          : // Get rid of duplicate prices with firstChild
+            tag.querySelector(".a-price").firstChild.innerText,
       });
-    }
+    });
 
     const filtered_products = products.filter(function (items) {
       return (
