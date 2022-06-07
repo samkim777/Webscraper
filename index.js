@@ -33,7 +33,8 @@ async function getItem() {
   )[1]; // @@@ Grab the max number of pages
 
   // @@@ page.$(ELEMENT_SELECTOR), grab and evaluate seperately instead of all inside page.evaluate
-  constgrabItemName = await page.evaluate(() => {
+
+  const grabItemName = await page.evaluate(() => {
     let products = [];
     const button = document.querySelector(
       ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"

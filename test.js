@@ -1,61 +1,60 @@
 const pupeteer = require("puppeteer");
 
-function orderList(name, price, rating) {
-  let new_list = [];
-  for (let i = 0; i < name.length; i++) {
-    new_list.push({
-      Name: name[i],
-      Price: price[i],
-      Rating: rating[i],
-    });
-  }
-  return new_list;
-}
-
-// Parameter passed in here is a list of strings
-function createOrderedList(list) {
-  let new_listRating = [];
-  let new_listSize = [];
-  // Debugging for looping over objects, not arrays!
-  for (let i = 0; i < Object.values(list).length; i += 2) {
-    new_listRating.push(Object.values(list)[i]);
-  }
-  for (let j = 1; j < Object.values(list).length; j += 2) {
-    new_listSize.push(Object.values(list)[j]);
-  }
-
-  return [new_listRating, new_listSize];
-}
-
 async function getItem() {
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
-    headless: true,
+    headless: false,
   });
+  let search_item = "gaming mouse".replace(/ /g, "+"); // @@ Replace blank space with a '+' sign
+  let page_number = 1;
+  let products = [];
+
   const page = await browser.newPage();
-  await page.goto(
-    "https://www.amazon.ca/s?k=gaming+mouse&crid=2JTGO38LHUJ2M&sprefix=gaming+mou%2Caps%2C430&ref=nb_sb_noss_2",
-    {
-      waitUntil: "domcontentloaded", // Wait until dom loaded
-    }
-  );
+  let url =
+    "https://www.amazon.ca/s?k=" +
+    search_item +
+    "&page=" +
+    page_number +
+    "&qid=1654220875&ref=sr_pg+" +
+    page_number;
+
+  await page.goto(url, {
+    waitUntil: "domcontentloaded", // Wait until dom loaded
+  });
+
+  // @@@ document.querySelectorAll('.s-pagination-item.s-pagination-disabled')[1].innerText
+  // - > Grabbing the maximum number of urls we should be going thru
+
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
     // Wait for item cards to be loaded
   });
+  // @@@TODO: Scrap all pages, Give images & links to user, Display information in a nice way [React? On a webpage?]
 
-  const grabItemName = await page.evaluate(() => {
-    let products = [];
+  // @@@ Perhaps just iterate the different urls until code 404 -->
+  //  --> Doesn't work, amazon keeps giving pages
 
-    const itemCard = document.querySelectorAll(
-      // Grab the card that contains all information about the item
-      ".a-section.a-spacing-base"
-    );
+  const itemHandlebutton = await page.$(
+    ".s-pagination-item.s-pagination-disabled"
+  )[1].innerText; // !!! Still returning TypeError: Cannot read properties of undefined (reading 'innerText')
+
+  // evaluateHandle is returning undefined
+
+  page_number = itemHandlebutton;
+  // Assign value
+
+  // @@@ Grab the max number of pages, and assign the value to
+  // @@@ page_num var
+
+  // @@@ page.$(ELEMENT_SELECTOR), grab and evaluate seperately instead of all inside page.evaluate
+  // !!!isWorking?
+  for (let i = 0; i < page_number; i++) {
+    //!!! Looping the same method here
+    const itemCard = await page.$(".a-section.a-spacing-base");
     const itemCardFiltered = Array.from(itemCard).filter(
       (card) => !card.className.includes("s-shopping-adviser")
-      // @@@ Get rid of amazon suggestions
+      // Get rid of amazon suggestions b/c we don't trust Mr Bezos
     );
-
     itemCardFiltered.forEach((tag) => {
       tag.remove();
       let item_name_null =
@@ -66,7 +65,7 @@ async function getItem() {
       let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
 
       products.push({
-        // Ternary operator uses first value as truthy, second as falsy
+        // Ternary operator for when an element is null, else give value
         Name: item_name_null
           ? "No name for this item"
           : tag.querySelector(
@@ -81,15 +80,16 @@ async function getItem() {
             tag.querySelector(".a-price").firstChild.innerText,
       });
     });
-    // @@@ Sample code for getting sample size
-    // let text = "4.5 out of 5 stars 1,558 ";
-    // const ratingStar = text.split(" ",1);
-    // const sampleSize = text.slice(18,text.length).replace(/,/g, '');
-
-    return products;
+  }
+  const filtered_products = products.filter(function (items) {
+    return (
+      parseInt(
+        items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
+      ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
+    );
   });
-  console.dir(grabItemName, { maxArrayLength: null });
+
+  console.dir(filtered_products, { maxArrayLength: null });
   await browser.close();
 }
-
 getItem();
