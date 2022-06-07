@@ -5,12 +5,17 @@ async function getItem() {
     // Launch the pupeteer browser without seeing what the script is doing
     headless: true,
   });
-  let search_item = "a b c".replace(/ /g, "+"); // @@ Replace blank space with a '+' sign
+  let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let page_number = 1;
 
   const page = await browser.newPage();
   let url =
-    "https://www.amazon.ca/s?k=${search_item}&page=${page_number}&qid=1654220875&ref=sr_pg+${page_number}";
+    "https://www.amazon.ca/s?k=" +
+    search_item +
+    "&page=" +
+    page_number +
+    "&qid=1654220875&ref=sr_pg+" +
+    page_number;
 
   await page.goto(url, {
     waitUntil: "domcontentloaded", // Wait until dom loaded
@@ -23,14 +28,9 @@ async function getItem() {
     visible: true,
     // Wait for item cards to be loaded
   });
-  // @@@TODO: Scrap all pages, Give images & links to user, Display information in a nice way [React? On a webpage?]
 
   // @@@ Perhaps just iterate the different urls until code 404 -->
   //  --> Doesn't work, amazon keeps giving pages
-
-  const itemHandlebutton = await page.evaluateHandle(
-    ".s-pagination-item.s-pagination-disabled"
-  )[1]; // @@@ Grab the max number of pages
 
   // @@@ page.$(ELEMENT_SELECTOR), grab and evaluate seperately instead of all inside page.evaluate
 
@@ -42,6 +42,7 @@ async function getItem() {
     const max_page_num = document.querySelectorAll(
       ".s-pagination-item.s-pagination-disabled"
     )[1].innerText;
+    // Can use window inside of page.evaluate
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
