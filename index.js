@@ -5,14 +5,19 @@ async function getItem() {
     // Launch the pupeteer browser without seeing what the script is doing
     headless: true,
   });
-  const page = await browser.newPage();
+  let search_item = "a b c".replace(/ /g, "+"); // @@ Replace blank space with a '+' sign
+  let page_number = 1;
 
-  await page.goto(
-    "https://www.amazon.ca/s?k=gaming+mouse&page=3&qid=1654220875&ref=sr_pg_3",
-    {
-      waitUntil: "domcontentloaded", // Wait until dom loaded
-    }
-  );
+  const page = await browser.newPage();
+  let url =
+    "https://www.amazon.ca/s?k=${search_item}&page=${page_number}&qid=1654220875&ref=sr_pg+${page_number}";
+
+  await page.goto(url, {
+    waitUntil: "domcontentloaded", // Wait until dom loaded
+  });
+
+  // @@@ document.querySelectorAll('.s-pagination-item.s-pagination-disabled')[1].innerText
+  // - > Grabbing the maximum number of urls we should be going thru
 
   await page.waitForSelector(".a-section.a-spacing-base", {
     visible: true,
@@ -20,17 +25,22 @@ async function getItem() {
   });
   // @@@TODO: Scrap all pages, Give images & links to user, Display information in a nice way [React? On a webpage?]
 
-  await page.waitForSelector(".s-pagination-item.s-pagination-disabled", {
-    timeout: 4000,
-  }); // Wait for button text
-
   // @@@ Perhaps just iterate the different urls until code 404 -->
+  //  --> Doesn't work, amazon keeps giving pages
 
-  grabItemName = await page.evaluate(() => {
+  const itemHandlebutton = await page.evaluateHandle(
+    ".s-pagination-item.s-pagination-disabled"
+  )[1]; // @@@ Grab the max number of pages
+
+  // @@@ page.$(ELEMENT_SELECTOR), grab and evaluate seperately instead of all inside page.evaluate
+  constgrabItemName = await page.evaluate(() => {
     let products = [];
     const button = document.querySelector(
       ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
     );
+    const max_page_num = document.querySelectorAll(
+      ".s-pagination-item.s-pagination-disabled"
+    )[1].innerText;
 
     const itemCard = document.querySelectorAll(
       // Grab the card that contains all information about the item
