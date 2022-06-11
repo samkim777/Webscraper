@@ -1,5 +1,4 @@
 const pupeteer = require("puppeteer");
-const open = require("open");
 
 async function getItem() {
   const browser = await pupeteer.launch({
@@ -7,8 +6,8 @@ async function getItem() {
     headless: false,
   });
   let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  let page_number = 1;
   let products = [];
+  let page_number = 1;
 
   const page = await browser.newPage();
   let url =
@@ -22,9 +21,6 @@ async function getItem() {
   let urls = [
     "https://www.amazon.ca/s?k=gaming+mouse&page=1&qid=1654765502&ref=sr_pg_1",
     "https://www.amazon.ca/s?k=gaming+mouse&page=2&qid=1654765502&ref=sr_pg_2",
-    "https://www.amazon.ca/s?k=gaming+mouse&page=3&qid=1654765502&ref=sr_pg_3",
-    "https://www.amazon.ca/s?k=gaming+mouse&page=4&qid=1654765502&ref=sr_pg_4",
-    "https://www.amazon.ca/s?k=gaming+mouse&page=5&qid=1654765502&ref=sr_pg_5",
   ];
 
   for (let j = 0; j < urls.length; j++) {
@@ -37,14 +33,12 @@ async function getItem() {
 
     await page.evaluate(
       ({ products }) => {
-        // s-pagination-item s-pagination-disabled.innerText -> maximum number of pages for this item
-        // TODO:
         const itemCard = document.querySelectorAll(".a-section.a-spacing-base");
         // Grab the card that contains all information about the item
 
         const itemCardFiltered = Array.from(itemCard).filter(
           (card) => !card.className.includes("s-shopping-adviser")
-          // Get rid of amazon suggestions b/c we don't trust Mr Bezos
+          // Get rid of amazon suggestions
         );
 
         itemCardFiltered.forEach((tag) => {
@@ -77,8 +71,6 @@ async function getItem() {
       { products }
     );
   }
-
-  // @@@ page.$(ELEMENT_SELECTOR), grab and evaluate seperately instead of all inside page.evaluate
 
   const filtered_products = products.filter(function (items) {
     return (
