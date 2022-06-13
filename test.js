@@ -66,17 +66,17 @@ async function getItem() {
       });
       return products;
     }, products);
+
+    const filtered_products = grabItemName.filter(function (items) {
+      return (
+        parseInt(
+          items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
+        ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
+      );
+    });
+    console.dir(filtered_products, { maxArrayLength: null });
   }
 
-  const filtered_products = products.filter(function (items) {
-    return (
-      parseInt(
-        items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
-      ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
-    );
-  });
-
-  console.dir(filtered_products, { maxArrayLength: null });
   await browser.close();
 }
 getItem();
