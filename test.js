@@ -2,16 +2,29 @@ const pupeteer = require("puppeteer");
 let products = [];
 
 async function getItem() {
+  let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let page_number = 1;
   let urls = [
-    "https://www.amazon.ca/s?k=gaming+mouse&page=1&qid=1654765502&ref=sr_pg_1",
-    "https://www.amazon.ca/s?k=gaming+mouse&page=2&qid=1654765502&ref=sr_pg_2",
+    "https://www.amazon.ca/s?k=" +
+      search_item +
+      "&page=" +
+      page_number +
+      "&qid=1654765502&ref=sr_pg_" +
+      page_number,
+    "https://www.amazon.ca/s?k=" +
+      search_item +
+      "&page=" +
+      page_number +
+      1 +
+      "&qid=1654765502&ref=sr_pg_" +
+      page_number +
+      1,
   ];
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: false,
   });
-  let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  let page_number = 1;
+
   for (let j = 0; j < urls.length; j++) {
     const page = await browser.newPage();
     let url =
