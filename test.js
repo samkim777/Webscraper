@@ -4,22 +4,42 @@ let products = [];
 async function getItem() {
   let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let page_number = 1;
-  let urls = [
-    "https://www.amazon.ca/s?k=" +
-      search_item +
-      "&page=" +
-      page_number +
-      "&qid=1654765502&ref=sr_pg_" +
-      page_number,
-    "https://www.amazon.ca/s?k=" +
-      search_item +
-      "&page=" +
-      page_number +
-      1 +
-      "&qid=1654765502&ref=sr_pg_" +
-      page_number +
-      1,
-  ];
+  // @@@ TODO: Generate urls here!
+  let urls = [];
+  for (let i = 0; i < 10; i++) {
+    urls.push(
+      "https://www.amazon.ca/s?k=" +
+        search_item +
+        "&page=" +
+        i +
+        "&qid=1654765502&ref=sr_pg_" +
+        i
+    );
+  }
+  // let urls = [
+  //   "https://www.amazon.ca/s?k=" +
+  //     search_item +
+  //     "&page=" +
+  //     page_number +
+  //     "&qid=1654765502&ref=sr_pg_" +
+  //     page_number,
+  //   "https://www.amazon.ca/s?k=" +
+  //     search_item +
+  //     "&page=" +
+  //     page_number + // This is actually now page 11
+  //     1 +
+  //     "&qid=1654765502&ref=sr_pg_" +
+  //     page_number +
+  //     1,
+  //   "https://www.amazon.ca/s?k=" +
+  //     search_item +
+  //     "&page=" +
+  //     page_number +
+  //     2 +
+  //     "&qid=1654765502&ref=sr_pg_" +
+  //     page_number +
+  //     2,
+  // ];
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: false,
@@ -27,13 +47,6 @@ async function getItem() {
 
   for (let j = 0; j < urls.length; j++) {
     const page = await browser.newPage();
-    let url =
-      "https://www.amazon.ca/s?k=" +
-      search_item +
-      "&page=" +
-      page_number +
-      "&qid=1654220875&ref=sr_pg+" +
-      page_number;
 
     await page.goto(urls[j], { waitUntil: "domcontentloaded" });
 
