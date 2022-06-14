@@ -1,99 +1,85 @@
 const pupeteer = require("puppeteer");
+let products = [];
 
 async function getItem() {
+  let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let page_number = 1;
+  // @@@ TODO: Generate urls here!
+  let urls = [];
+  for (let i = 0; i < 10; i++) {
+    urls.push(
+      "https://www.amazon.ca/s?k=" +
+        search_item +
+        "&page=" +
+        i +
+        "&qid=1654765502&ref=sr_pg_" +
+        i
+    );
+  }
+
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: true,
   });
-  let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  let page_number = 1;
 
-  const page = await browser.newPage();
-  let url =
-    "https://www.amazon.ca/s?k=" +
-    search_item +
-    "&page=" +
-    page_number +
-    "&qid=1654220875&ref=sr_pg+" +
-    page_number;
+  for (let j = 0; j < urls.length; j++) {
+    const page = await browser.newPage();
 
-  await page.goto(url, {
-    waitUntil: "domcontentloaded", // Wait until dom loaded
-  });
+    await page.goto(urls[j], { waitUntil: "domcontentloaded" });
 
-  // @@@ document.querySelectorAll('.s-pagination-item.s-pagination-disabled')[1].innerText
-  // - > Grabbing the maximum number of urls we should be going thru
-
-  await page.waitForSelector(".a-section.a-spacing-base", {
-    visible: true,
-    // Wait for item cards to be loaded
-  });
-
-  // @@@ Perhaps just iterate the different urls until code 404 -->
-  //  --> Doesn't work, amazon keeps giving pages
-
-  // @@@ page.$(ELEMENT_SELECTOR), grab and evaluate seperately instead of all inside page.evaluate
-
-  const grabItemName = await page.evaluate(() => {
-    let products = [];
-    const button = document.querySelector(
-      ".s-pagination-item.s-pagination-next.s-pagination-button.s-pagination-separator"
-    );
-    const max_page_num = document.querySelectorAll(
-      ".s-pagination-item.s-pagination-disabled"
-    )[1].innerText;
-    // Can use window inside of page.evaluate
-
-    const itemCard = document.querySelectorAll(
-      // Grab the card that contains all information about the item
-      ".a-section.a-spacing-base"
-    );
-
-    const itemCardFiltered = Array.from(itemCard).filter(
-      (card) => !card.className.includes("s-shopping-adviser")
-      // Get rid of amazon suggestions b/c we don't trust Mr Bezos
-    );
-    // s-pagination-item s-pagination-disabled.innerText -> maximum number of pages for this item
-    // TODO:
-
-    itemCardFiltered.forEach((tag) => {
-      tag.remove();
-      let item_name_null =
-        tag.querySelector(
-          ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-        ) == null;
-      let item_price_null = tag.querySelector(".a-price") == null;
-      let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
-
-      products.push({
-        // Ternary operator for when an element is null, else give value
-        Name: item_name_null
-          ? "No name for this item"
-          : tag.querySelector(
-              ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
-            ).innerText,
-        Rating: item_rating_null
-          ? "No rating for this item"
-          : tag.querySelector(".a-row.a-size-small").innerText,
-        Price: item_price_null
-          ? "No price for this item"
-          : // Get rid of duplicate prices with firstChild
-            tag.querySelector(".a-price").firstChild.innerText,
-      });
+    await page.waitForSelector(".a-section.a-spacing-base", {
+      visible: true,
+      // Wait for item cards to be loaded
     });
 
-    const filtered_products = products.filter(function (items) {
+    const grabItemName = await page.evaluate((products) => {
+      const itemCard = document.querySelectorAll(".a-section.a-spacing-base");
+      // Grab the card that contains all information about the item
+
+      const itemCardFiltered = Array.from(itemCard).filter(
+        (card) => !card.className.includes("s-shopping-adviser")
+        // Get rid of amazon suggestions
+      );
+      //@@@ TODO: WHY ISN'T THE PRODUCTS LIST DISPLAYING PROPERLY
+      // -> Scoping issues with the varible 'products'
+      itemCardFiltered.forEach((tag) => {
+        tag.remove();
+        let item_name_null =
+          tag.querySelector(
+            ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+          ) == null;
+        let item_price_null = tag.querySelector(".a-price") == null;
+        let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
+
+        products.push({
+          // Ternary operator for when an element is null, else give value
+          Name: item_name_null
+            ? "No name for this item"
+            : tag.querySelector(
+                ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
+              ).innerText,
+          Rating: item_rating_null
+            ? "No rating for this item"
+            : tag.querySelector(".a-row.a-size-small").innerText,
+          Price: item_price_null
+            ? "No price for this item"
+            : // Get rid of duplicate prices with firstChild
+              tag.querySelector(".a-price").firstChild.innerText,
+        });
+      });
+      return products;
+    }, products);
+
+    const filtered_products = grabItemName.filter(function (items) {
       return (
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
         ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
       );
     });
+    console.dir(filtered_products, { maxArrayLength: null });
+  }
 
-    return filtered_products;
-  });
-
-  console.dir(grabItemName, { maxArrayLength: null });
   await browser.close();
 }
 getItem();

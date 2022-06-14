@@ -2,8 +2,7 @@ const pupeteer = require("puppeteer");
 let products = [];
 
 async function getItem() {
-  let search_item = "gaming mouse".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  let page_number = 1;
+  let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
   // @@@ TODO: Generate urls here!
   let urls = [];
   for (let i = 0; i < 10; i++) {
@@ -16,30 +15,7 @@ async function getItem() {
         i
     );
   }
-  // let urls = [
-  //   "https://www.amazon.ca/s?k=" +
-  //     search_item +
-  //     "&page=" +
-  //     page_number +
-  //     "&qid=1654765502&ref=sr_pg_" +
-  //     page_number,
-  //   "https://www.amazon.ca/s?k=" +
-  //     search_item +
-  //     "&page=" +
-  //     page_number + // This is actually now page 11
-  //     1 +
-  //     "&qid=1654765502&ref=sr_pg_" +
-  //     page_number +
-  //     1,
-  //   "https://www.amazon.ca/s?k=" +
-  //     search_item +
-  //     "&page=" +
-  //     page_number +
-  //     2 +
-  //     "&qid=1654765502&ref=sr_pg_" +
-  //     page_number +
-  //     2,
-  // ];
+
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: false,
@@ -64,7 +40,7 @@ async function getItem() {
         // Get rid of amazon suggestions
       );
       //@@@ TODO: WHY ISN'T THE PRODUCTS LIST DISPLAYING PROPERLY
-
+      // -> Scoping issues with the varible 'products'
       itemCardFiltered.forEach((tag) => {
         tag.remove();
         let item_name_null =
@@ -100,6 +76,7 @@ async function getItem() {
         ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
       );
     });
+    await page.close(); // Close the scraped page
     console.dir(filtered_products, { maxArrayLength: null });
   }
 
