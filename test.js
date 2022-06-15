@@ -3,9 +3,8 @@ let products = [];
 
 async function getItem() {
   let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  // @@@ TODO: Generate urls here!
   let urls = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 2; i++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
@@ -77,7 +76,9 @@ async function getItem() {
       );
     });
     await page.close(); // Close the scraped page
-    console.dir(filtered_products, { maxArrayLength: null });
+    if (j == urls.length - 1) {
+      console.dir(filtered_products, { maxArrayLength: null });
+    }
   }
 
   await browser.close();
