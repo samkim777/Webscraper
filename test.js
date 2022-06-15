@@ -76,6 +76,7 @@ async function getItem() {
       );
     });
     await page.close(); // Close the scraped page
+    //@@@ Sorting algorithm here
     if (j == urls.length - 1) {
       console.dir(filtered_products, { maxArrayLength: null });
     }
