@@ -77,6 +77,7 @@ async function getItem() {
     });
     await page.close(); // Close the scraped page
     //@@@ Sorting algorithm here
+    // Maybe use quick sort over merge sort just because of the speed diff?
     if (j == urls.length - 1) {
       console.dir(filtered_products, { maxArrayLength: null });
     }
