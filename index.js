@@ -1,12 +1,12 @@
+const { filter } = require("domutils");
 const pupeteer = require("puppeteer");
 let products = [];
+const quickSort = require("./quicksort.js");
 
 async function getItem() {
   let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  let page_number = 1;
-  // @@@ TODO: Generate urls here!
   let urls = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 2; i++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
@@ -77,7 +77,24 @@ async function getItem() {
         ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
       );
     });
-    console.dir(filtered_products, { maxArrayLength: null });
+    await page.close(); // Close the scraped page
+
+    //@@@ Sorting algorithm here
+    // Maybe use quick sort over merge sort just because of the speed diff
+    if (j == urls.length - 1) {
+      filtered_products.sort(function (a, b) {
+        var keyA = parseInt(a.Rating.substr(18, a.length).replace(/,/g, ""));
+        var keyB = parseInt(b.Rating.substr(18, b.length).replace(/,/g, ""));
+        if (keyA > keyB) return -1;
+        if (keyA < keyB) return 1;
+        // Perhaps here lies the issue...
+        return 0;
+        // @@@ Seems to be only comparing the first two digits!
+      });
+
+      console.dir(filtered_products, { maxArrayLength: null });
+      /// @@@ Should be using filtered_products.Rating.substr... here
+    }
   }
 
   await browser.close();
