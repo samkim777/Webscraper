@@ -1,7 +1,6 @@
 const { filter } = require("domutils");
 const pupeteer = require("puppeteer");
 let products = [];
-const quickSort = require("./quicksort.js");
 
 async function getItem() {
   let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
@@ -50,6 +49,8 @@ async function getItem() {
           ) == null;
         let item_price_null = tag.querySelector(".a-price") == null;
         let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
+        let item_link_null =
+          tag.querySelector(".a-link-normal.s-no-outline") == null;
 
         products.push({
           // Ternary operator for when an element is null, else give value
@@ -65,6 +66,9 @@ async function getItem() {
             ? "No price for this item"
             : // Get rid of duplicate prices with firstChild
               tag.querySelector(".a-price").firstChild.innerText,
+          Link: item_link_null
+            ? "No link for this item"
+            : tag.querySelector(".a-link-normal.s-no-outline").href,
         });
       });
       return products;

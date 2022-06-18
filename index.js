@@ -87,9 +87,10 @@ async function getItem() {
         var keyB = parseInt(b.Rating.substr(18, b.length).replace(/,/g, ""));
         if (keyA > keyB) return -1;
         if (keyA < keyB) return 1;
-        // Perhaps here lies the issue...
+
         return 0;
         // @@@ Seems to be only comparing the first two digits!
+        // Comparing integers, not strings
       });
 
       console.dir(filtered_products, { maxArrayLength: null });
