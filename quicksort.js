@@ -28,7 +28,7 @@ function partition(arr, left, right) {
   return i;
 }
 
-function quickSort(arr, left = 0, right = arr.length - 1) {
+module.exports = function quickSort(arr, left = 0, right = arr.length - 1) {
   if (arr.length < 2) return arr;
 
   const index = partition(arr, left, right);
@@ -40,4 +40,4 @@ function quickSort(arr, left = 0, right = arr.length - 1) {
     quickSort(arr, index, right);
   }
   return arr;
-}
+};

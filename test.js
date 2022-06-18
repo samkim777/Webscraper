@@ -1,5 +1,7 @@
+const { filter } = require("domutils");
 const pupeteer = require("puppeteer");
 let products = [];
+const quickSort = require("./quicksort.js");
 
 async function getItem() {
   let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
@@ -17,7 +19,7 @@ async function getItem() {
 
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
-    headless: false,
+    headless: true,
   });
 
   for (let j = 0; j < urls.length; j++) {
@@ -76,10 +78,22 @@ async function getItem() {
       );
     });
     await page.close(); // Close the scraped page
+
     //@@@ Sorting algorithm here
-    // Maybe use quick sort over merge sort just because of the speed diff?
+    // Maybe use quick sort over merge sort just because of the speed diff
     if (j == urls.length - 1) {
+      filtered_products.sort(function (a, b) {
+        var keyA = a.Rating.substr(18, a.length).replace(/,/g, "");
+        var keyB = b.Rating.substr(18, b.length).replace(/,/g, "");
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+      // @@@ filtered_products.Rating undefined
+
+      // @@@ How to import and export functions between files
       console.dir(filtered_products, { maxArrayLength: null });
+      /// @@@ Should be using filtered_products.Rating.substr... here
     }
   }
 
