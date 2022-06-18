@@ -83,10 +83,11 @@ async function getItem() {
     // Maybe use quick sort over merge sort just because of the speed diff
     if (j == urls.length - 1) {
       filtered_products.sort(function (a, b) {
-        var keyA = a.Rating.substr(18, 25).replace(/,/g, "");
-        var keyB = b.Rating.substr(18, 25).replace(/,/g, "");
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
+        var keyA = parseInt(a.Rating.substr(18, a.length).replace(/,/g, ""));
+        var keyB = parseInt(b.Rating.substr(18, b.length).replace(/,/g, ""));
+        if (keyA > keyB) return -1;
+        if (keyA < keyB) return 1;
+        // Perhaps here lies the issue...
         return 0;
         // @@@ Seems to be only comparing the first two digits!
       });
