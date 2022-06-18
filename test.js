@@ -90,7 +90,7 @@ async function getItem() {
         // Perhaps here lies the issue...
         return 0;
         // @@@ Seems to be only comparing the first two digits!
-        // @@@ gotta parseInt the string!
+        // @@@ gotta parseInt the string!!
       });
 
       console.dir(filtered_products, { maxArrayLength: null });
