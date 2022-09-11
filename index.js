@@ -20,6 +20,7 @@ async function getItem() {
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: true,
+    executablePath: '/opt/homebrew/bin/chromium'
   });
 
   for (let j = 0; j < urls.length; j++) {

@@ -12,10 +12,10 @@
   "dependencies": {
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.10",
+    "domutils": "^3.0.1",
     "express": "^4.18.0",
     "puppeteer": "^13.7.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
   }
-
 }
