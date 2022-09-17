@@ -4,7 +4,7 @@ let products = [];
 const quickSort = require("./quicksort.js");
 
 async function getItem() {
-  let search_item = "massage guns".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let search_item = "wall book shelf".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let urls = [];
   for (let i = 0; i < 2; i++) {
     urls.push(
@@ -20,7 +20,7 @@ async function getItem() {
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: true,
-    executablePath: '/opt/homebrew/bin/chromium'
+    executablePath: '/opt/homebrew/bin/chromium' // For M1 chip compatibility issues with puppeteer
   });
 
   for (let j = 0; j < urls.length; j++) {
@@ -80,8 +80,7 @@ async function getItem() {
     });
     await page.close(); // Close the scraped page
 
-    //@@@ Sorting algorithm here
-    // Maybe use quick sort over merge sort just because of the speed diff
+    //@@@ Sorting algorithm
     if (j == urls.length - 1) {
       filtered_products.sort(function (a, b) {
         var keyA = parseInt(a.Rating.substr(18, a.length).replace(/,/g, ""));
@@ -90,12 +89,11 @@ async function getItem() {
         if (keyA < keyB) return 1;
 
         return 0;
-        // @@@ Seems to be only comparing the first two digits!
-        // Comparing integers, not strings
+       
       });
 
       console.dir(filtered_products, { maxArrayLength: null });
-      /// @@@ Should be using filtered_products.Rating.substr... here
+ 
     }
   }
 
