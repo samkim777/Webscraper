@@ -4,9 +4,9 @@ let products = [];
 const quickSort = require("./quicksort.js");
 
 async function getItem() {
-  let search_item = "wall book shelf".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let search_item = "m1 macbook air case".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let urls = [];
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 5; i++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
