@@ -6,6 +6,10 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req,res) => {
+  res.send(filtered_products)
+  // send filtered products upon request
+})
+
 async function getItem() {
   let search_item = "m1 macbook air case".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let urls = [];
@@ -102,6 +106,7 @@ async function getItem() {
 
   await browser.close();
 }
- res.send(filtered_products)})
- 
+
+
+
 getItem();
