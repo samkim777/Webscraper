@@ -2,7 +2,10 @@ const { filter } = require("domutils");
 const pupeteer = require("puppeteer");
 let products = [];
 const quickSort = require("./quicksort.js");
+const express = require('express');
+const app = express();
 
+app.get('/', (req,res) => {
 async function getItem() {
   let search_item = "m1 macbook air case".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let urls = [];
@@ -99,4 +102,6 @@ async function getItem() {
 
   await browser.close();
 }
+ res.send(filtered_products)})
+ 
 getItem();
