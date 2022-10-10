@@ -13,7 +13,7 @@ app.get('/', (req,res) => {
 async function getItem() {
   let search_item = "m1 macbook air case".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let urls = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 7; i++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
