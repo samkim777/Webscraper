@@ -11,9 +11,9 @@ app.get('/', (req,res) => {
 })
 
 async function getItem() {
-  let search_item = "m1 macbook air case".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let urls = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 3; i++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
@@ -45,7 +45,7 @@ async function getItem() {
       // Grab the card that contains all information about the item
 
       const itemCardFiltered = Array.from(itemCard).filter(
-        (card) => !card.className.includes("s-shopping-adviser")
+        (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored')
         // Get rid of amazon suggestions
       );
       //@@@ TODO: WHY ISN'T THE PRODUCTS LIST DISPLAYING PROPERLY
