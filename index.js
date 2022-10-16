@@ -12,6 +12,7 @@ app.get('/', (req,res) => {
 
 async function getItem() {
   let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let search_name = search_item.replace('+', '');
   let urls = [];
   for (let i = 0; i < 3; i++) {
     urls.push(
@@ -45,8 +46,9 @@ async function getItem() {
       // Grab the card that contains all information about the item
 
       const itemCardFiltered = Array.from(itemCard).filter(
-        (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored')
-        // Get rid of amazon suggestions
+        (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored') 
+        && card.lastChild.innerText.toLowerCase().includes('pink')
+        
       );
       //@@@ TODO: WHY ISN'T THE PRODUCTS LIST DISPLAYING PROPERLY
       // -> Scoping issues with the varible 'products'
@@ -83,7 +85,7 @@ async function getItem() {
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
         ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
-      );
+      ) ;
     });
     await page.close(); // Close the scraped page
 
