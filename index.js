@@ -12,7 +12,7 @@ app.get('/', (req,res) => {
 
 async function getItem() {
   let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
-  let search_name = search_item.replace('+', '');
+  let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
   for (let i = 0; i < 3; i++) {
     urls.push(
@@ -41,13 +41,15 @@ async function getItem() {
       // Wait for item cards to be loaded
     });
 
-    const grabItemName = await page.evaluate((products) => {
+    const grabItemName = await page.evaluate((products,search_name) => {
       const itemCard = document.querySelectorAll(".a-section.a-spacing-base");
       // Grab the card that contains all information about the item
 
       const itemCardFiltered = Array.from(itemCard).filter(
         (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored') 
-        && card.lastChild.innerText.toLowerCase().includes('pink')
+        && card.lastChild.innerText.toLowerCase().includes(search_name)
+        //$$$ search_name is not defined
+        //@@@ page.evaluate needs to be passed in a parameter
         
       );
       //@@@ TODO: WHY ISN'T THE PRODUCTS LIST DISPLAYING PROPERLY
@@ -78,7 +80,7 @@ async function getItem() {
         });
       });
       return products;
-    }, products);
+    }, products,search_name);
 
     const filtered_products = grabItemName.filter(function (items) {
       return (
