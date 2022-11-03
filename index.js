@@ -47,8 +47,10 @@ async function getItem() {
 
       const itemCardFiltered = Array.from(itemCard).filter(
         (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored') 
-        && card.lastChild.innerText.toLowerCase().includes(search_name)
-        //$$$ search_name is not defined
+        // && card.lastChild.innerText.toLowerCase().includes(search_name)
+        //##### Checking if string contains multiple words is bit more complicated
+
+
         //@@@ page.evaluate needs to be passed in a parameter
         
       );
@@ -86,8 +88,8 @@ async function getItem() {
       return (
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
-        ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4
-      ) ;
+        ) >= 200 && parseFloat(items.Rating.substr(0, 3)) >= 4 
+      )
     });
     await page.close(); // Close the scraped page
 
