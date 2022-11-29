@@ -1,11 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {useState,useEffect} from 'react';
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
+  const [data, setData] = useState('');
+
+  useEffect(() => {
+    fetch("/api")
+      .then((res) => res.json())
+      .then((data) => setData(data.message));
+  }, []);
+
+  
   return (
     <div className="App">
       <header className="App-header">
-        Results will be displayed here
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>{!data ? "Loading..." : data}</p>
       </header>
     </div>
   );

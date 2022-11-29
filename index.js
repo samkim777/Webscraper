@@ -1,14 +1,12 @@
 const { filter } = require("domutils");
 const pupeteer = require("puppeteer");
 let products = [];
-const quickSort = require("./quicksort.js");
 const express = require('express');
-const app = express();
+const app = express()
+const PORT = process.env.PORT || 3000;
 
-app.get('/', (req,res) => {
-  res.send(filtered_products)
-  // send filtered products upon request
-})
+
+
 
 async function getItem() {
   let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
@@ -102,17 +100,37 @@ async function getItem() {
         if (keyA < keyB) return 1;
 
         return 0;
-       
       });
-
       console.dir(filtered_products, { maxArrayLength: null });
+
+     
+       //@@@ Our node/ server acts as API, which is like Facebook: It allows two applications to talk to each other. 
+       //@@@ and you can do data manipulation and stuff like that. 
+       //@@@ Can run server by going to react-client/src then npm start.
+
+       //@@@!! Next is to find out how our front end is going to call for this information
+ 
+
+
+
+      
  
     }
+   
+  return filtered_products;
   }
+  
 
   await browser.close();
 }
 
 
+app.get('/api', function(req,res) {
+  res.send(getItem())
+})
 
-getItem();
+app.listen(PORT, () => {
+  console.log('Hello ${PORT}!')
+})
+
+
