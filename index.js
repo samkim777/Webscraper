@@ -82,7 +82,7 @@ async function getItem() {
       return products;
     }, products,search_name);
 
-    const filtered_products = grabItemName.filter(function (items) {
+    var filtered_products = grabItemName.filter(function (items) {
       return (
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
@@ -98,10 +98,9 @@ async function getItem() {
         var keyB = parseInt(b.Rating.substr(18, b.length).replace(/,/g, ""));
         if (keyA > keyB) return -1;
         if (keyA < keyB) return 1;
-
         return 0;
       });
-      console.dir(filtered_products, { maxArrayLength: null });
+      
 
      
        //@@@ Our node/ server acts as API, which is like Facebook: It allows two applications to talk to each other. 
@@ -110,24 +109,23 @@ async function getItem() {
 
        //@@@!! Next is to find out how our front end is going to call for this information
  
-
-
-
-      
+       console.dir(filtered_products, { maxArrayLength: null });
+       app.get('/api', function(req,res) {
+        res.send(filtered_products)
+      })
  
     }
+  
    
-  return filtered_products;
+  // return filtered_products;
   }
   
 
   await browser.close();
 }
+getItem();
 
 
-app.get('/api', function(req,res) {
-  res.send(getItem())
-})
 
 app.listen(PORT, () => {
   console.log('Hello ${PORT}!')
