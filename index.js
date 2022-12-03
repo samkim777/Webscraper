@@ -12,14 +12,14 @@ async function getItem() {
   let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
-  for (let i = 0; i < 3; i++) {
+  for (let pages = 0; pages < 3; pages++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
         "&page=" +
-        i +
+        pages +
         "&qid=1654765502&ref=sr_pg_" +
-        i
+        pages
     );
   }
 
@@ -117,7 +117,8 @@ async function getItem() {
     }
   
    
-  // return filtered_products;
+  //@@@ TODO: Parse the list displayed onto the webpage into a legible JSON file.
+  //@@@ 
   }
   
 
