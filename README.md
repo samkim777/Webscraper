@@ -15,7 +15,7 @@
 ###### 2. Change the variables *search_item* and *pages* to what you want, which indicate item name and number of pages to scrape respectively.
 
 
-###### 3. Finally, after cloning the project to a desired directory, it can be run with the command 
+###### 3. Finally, run with the command 
 ```
 node index.js
 ```
