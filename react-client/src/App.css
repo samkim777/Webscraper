@@ -28,6 +28,14 @@
   color: #61dafb;
 }
 
+.Item-box {
+  color:aquamarine;
+  height: 40vh;
+  width: 40vw;
+  background-color: dodgerblue;
+  margin-top: 20vh;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
