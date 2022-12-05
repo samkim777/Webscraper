@@ -3,7 +3,7 @@ const pupeteer = require("puppeteer");
 let products = [];
 const express = require('express');
 const app = express()
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 
 
@@ -110,8 +110,8 @@ async function getItem() {
        //@@@!! Next is to find out how our front end is going to call for this information
  
        console.dir(filtered_products, { maxArrayLength: null });
-       app.get('/api', function(req,res) {
-        res.send(filtered_products)
+       app.get('/', function(req,res) {
+        res.send(filtered_products);
       })
  
     }
@@ -129,7 +129,7 @@ getItem();
 
 
 app.listen(PORT, () => {
-  console.log('Hello ${PORT}!')
+  console.log('Scraping...')
 })
 
 

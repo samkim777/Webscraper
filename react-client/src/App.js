@@ -1,25 +1,29 @@
 import React from "react";
 import {useState,useEffect} from 'react';
-import logo from "./logo.svg";
+import axios from "axios";
 import "./App.css";
 
 function App() {
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
+  let list = [];
 
-  
+
+
+  const getData = () => {
+    axios.get('/').then((res) => console.log(res.data))
+    // Debug, fetching data from index.js port, not from react port
+  }
 
   useEffect(() => {
-    fetch("/api")
-      .then((data) => setData(data.message));
+    getData();
   }, []);
 
-  
+
 
   return (
     <div className="App">
       <header className="App-header">
-        <div className = 'Item-box'> <p>Name</p> <p>Rating</p><p>Price</p> </div>
-        <p>{!data ? "Loading..." : data}</p>
+        <div> {list} </div>
       </header>
     </div>
   );
