@@ -3,12 +3,14 @@ const pupeteer = require("puppeteer");
 let products = [];
 const express = require('express');
 const app = express()
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8080;
+const cors = require('cors');
 
 
 
 
 async function getItem() {
+  app.use(cors());
   let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
@@ -110,7 +112,10 @@ async function getItem() {
        //@@@!! Next is to find out how our front end is going to call for this information
  
        console.dir(filtered_products, { maxArrayLength: null });
-       app.get('/', function(req,res) {
+
+
+       
+       app.post('/', function(req,res) {
         res.send(filtered_products);
       })
  
@@ -129,7 +134,7 @@ getItem();
 
 
 app.listen(PORT, () => {
-  console.log('Scraping...')
+  console.log('Scraping on port' + PORT)
 })
 
 
