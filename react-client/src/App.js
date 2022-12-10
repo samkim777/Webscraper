@@ -6,31 +6,30 @@ import "./App.css";
 
 function App() {
   const [data, setData] = useState([]);
-  let list = [];
 
-  
+  const [product, setProduct] = useState([{}]);
 
 
 
   const getData = () => {
-    axios.post('/').then((res) => setData(res.data))
-    // So this fetches the data properly, if the url is valid
-    // Debug, fetching data from index.js port, not from react port
+    axios.get('/')
+    .then((res) => setProduct(res.data))
+    // fetches the data properly, if the url is valid
+ 
   }
 
   useEffect(() => {
     getData();
   }, []);
 
-
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <div> Meow Meow </div>
-        <h1>{Object.keys(data).map(key => key + ": " + data[key])}</h1>
-      </header>
-    </div>
+    <div className="products">
+    {product.map((user) => (
+      <div className="products">{user}</div>
+      ///!!!
+    ))}
+  </div>
+
   );
 }
 

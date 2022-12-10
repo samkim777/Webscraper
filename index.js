@@ -47,14 +47,14 @@ async function getItem() {
 
       const itemCardFiltered = Array.from(itemCard).filter(
         (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored') 
-        // && card.lastChild.innerText.toLowerCase().includes(search_name)
+      
         //##### Checking if string contains multiple words is bit more complicated
 
 
         //@@@ page.evaluate needs to be passed in a parameter
         
       );
-      //@@@ TODO: WHY ISN'T THE PRODUCTS LIST DISPLAYING PROPERLY
+     
       // -> Scoping issues with the varible 'products'
       itemCardFiltered.forEach((tag) => {
         tag.remove();
@@ -105,31 +105,29 @@ async function getItem() {
       
 
      
-       //@@@ Our node/ server acts as API, which is like Facebook: It allows two applications to talk to each other. 
-       //@@@ and you can do data manipulation and stuff like that. 
-       //@@@ Can run server by going to react-client/src then npm start.
 
-       //@@@!! Next is to find out how our front end is going to call for this information
  
        console.dir(filtered_products, { maxArrayLength: null });
 
 
        
-       app.post('/', function(req,res) {
-        res.send(filtered_products);
-      })
+      
  
     }
   
    
-  //@@@ TODO: Parse the list displayed onto the webpage into a legible JSON file.
-  //@@@ 
+
   }
   
 
   await browser.close();
+  app.post('/', function(req,res) {
+    res.send(filtered_products);
+  })
 }
 getItem();
+
+
 
 
 
