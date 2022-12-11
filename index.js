@@ -3,7 +3,7 @@ const pupeteer = require("puppeteer");
 let products = [];
 const express = require('express');
 const app = express()
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 const cors = require('cors');
 
 
@@ -121,8 +121,9 @@ async function getItem() {
   
 
   await browser.close();
-  app.post('/', function(req,res) {
-    res.send(filtered_products);
+  app.get('/', function(req,res) {
+    // Post to localhost:3001
+    res.send('Meow Meow nigguh');
   })
 }
 getItem();
@@ -132,7 +133,7 @@ getItem();
 
 
 app.listen(PORT, () => {
-  console.log('Scraping on port' + PORT)
+  console.log('Scraping on port: ' + PORT)
 })
 
 

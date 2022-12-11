@@ -5,15 +5,15 @@ import "./App.css";
 
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState('');
 
-  const [product, setProduct] = useState([{}]);
+  const [product, setProduct] = useState([]);
 
 
 
   const getData = () => {
-    axios.get('/')
-    .then((res) => setProduct(res.data))
+    axios.get('http://localhost:3001/',{crossdomain:true}) // Fetching from localhost:3000
+    .then((res) => setData(res.data))
     // fetches the data properly, if the url is valid
  
   }
@@ -24,10 +24,8 @@ function App() {
 
   return (
     <div className="products">
-    {product.map((user) => (
-      <div className="products">{user}</div>
-      ///!!!
-    ))}
+    <div> Meow Meow</div>
+     <div>{data}</div>
   </div>
 
   );
