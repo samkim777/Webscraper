@@ -108,7 +108,11 @@ async function getItem() {
 
  
        console.dir(filtered_products, { maxArrayLength: null });
-
+       
+       app.get('/', function(req,res) {
+        // Post to localhost:3001
+        res.send(filtered_products);
+      })
 
        
       
@@ -121,10 +125,7 @@ async function getItem() {
   
 
   await browser.close();
-  app.get('/', function(req,res) {
-    // Post to localhost:3001
-    res.send('Meow Meow');
-  })
+ 
 }
 getItem();
 

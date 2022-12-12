@@ -13,7 +13,7 @@ function App() {
 
   const getData = () => {
     axios.get('http://localhost:3001/',{crossdomain:true}) // Fetching from localhost:3000
-    .then((res) => setData(res.data))
+    .then((res) => setProduct(res.data))
     // fetches the data properly, if the url is valid
  
   }
@@ -25,7 +25,7 @@ function App() {
   return (
     <div className="products">
     <div> Meow Meow</div>
-     <div>{data}</div>
+     {product.map(data => data.Name + data.Rating + data.Price)}
   </div>
 
   );
