@@ -9,9 +9,9 @@ const cors = require('cors');
 
 
 
-async function getItem() {
+async function getItem(item_names) {
   app.use(cors());
-  let search_item = "pink gaming keyboard".replace(/ /g, "+"); // Replace blank space with a '+' sign
+  let search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
   for (let pages = 0; pages < 3; pages++) {
@@ -109,10 +109,10 @@ async function getItem() {
  
        console.dir(filtered_products, { maxArrayLength: null });
        
-       app.get('/', function(req,res) {
-        // Post to localhost:3001
-        res.send(filtered_products);
-      })
+      //  app.get('/', function(req,res) {
+      //   // Post to localhost:3001
+      //   res.send(filtered_products);
+      // })
 
        
       
@@ -127,7 +127,14 @@ async function getItem() {
   await browser.close();
  
 }
-getItem();
+app.get('/', function(req,res) {
+  // Post to localhost:3001
+  res.send(getItem(req));
+})
+
+
+
+// getItem();
 
 
 

@@ -4,10 +4,22 @@ import axios from "axios";
 import "./App.css";
 
 
+
 function App() {
   const [data, setData] = useState('');
 
   const [product, setProduct] = useState([]);
+  
+  const [value, setValue] = useState('');
+
+  const onChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  function fetchData(item) {
+    console.log(item)
+  }
+
 
 
 
@@ -19,13 +31,15 @@ function App() {
   }
 
   useEffect(() => {
-    getData();
+    fetchData()
+   
   }, []);
 
   return (
     <div className="products">
-    <div> Meow Meow</div>
-     {product.map(data => data.Name + data.Rating + data.Price)}
+         
+         <button onClick={() => fetchData(value)}>Search</button>
+     {product.map(data => <div> {data.Name} + {data.Rating} + {data.Price} </div>)}
   </div>
 
   );
