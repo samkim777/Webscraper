@@ -24,21 +24,22 @@ function App() {
 
 
   const getData = () => {
-    axios.get('http://localhost:3001/',{crossdomain:true}) // Fetching from localhost:3000
+    axios.get('http://localhost:3001/',{params: {
+      data: value // GET request with user value
+    }},{crossdomain:true}) // Fetching from localhost:3000
     .then((res) => setProduct(res.data))
-    // fetches the data properly, if the url is valid
  
   }
 
   useEffect(() => {
-    fetchData()
+    getData()
    
   }, []);
 
   return (
     <div className="products">
-         
-         <button onClick={() => fetchData(value)}>Search</button>
+         <input type="text" />
+         <button onClick={() => getData(value)}>Search</button>
      {product.map(data => <div> {data.Name} + {data.Rating} + {data.Price} </div>)}
   </div>
 

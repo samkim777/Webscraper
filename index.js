@@ -127,9 +127,12 @@ async function getItem(item_names) {
   await browser.close();
  
 }
+
 app.get('/', function(req,res) {
   // Post to localhost:3001
-  res.send(getItem(req));
+  // Fetch user input data 
+  let param = req.query.data
+  res.send(getItem(param));
 })
 
 
