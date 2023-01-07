@@ -16,9 +16,7 @@ function App() {
     setValue(event.target.value);
   };
 
-  function fetchData(item) {
-    console.log(item)
-  }
+
 
 
 
