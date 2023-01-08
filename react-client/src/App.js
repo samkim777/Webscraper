@@ -6,7 +6,7 @@ import "./App.css";
 
 
 function App() {
-  const [data, setData] = useState('');
+
 
   const [product, setProduct] = useState([]);
   
@@ -26,7 +26,7 @@ function App() {
       data: value // GET request with user value
     }},{crossdomain:true}) // Fetching from localhost:3000
     .then((res) => setProduct(res.data))
- 
+
   }
 
   useEffect(() => {

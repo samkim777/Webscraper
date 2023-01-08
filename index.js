@@ -11,12 +11,13 @@ const cors = require('cors');
 
 async function getItem(item_names) {
   /// 
-  app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", 'http://localhost:3000'); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+  // app.use(function(req, res, next) {
+  //   res.header("Access-Control-Allow-Origin", 'http://localhost:3000'); // update to match the domain you will make the request from
+  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  //   next();
+  // });
   ///
+  app.use(cors())
   
   let search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
@@ -135,13 +136,6 @@ async function getItem(item_names) {
  
 }
 
-app.get('/', function(req,res) {
-  // Post to localhost:3001
-  // Fetch user input data 
-  let param = req.query.data
-  res.send(getItem(param));
-})
-
 
 
 // getItem();
@@ -149,9 +143,18 @@ app.get('/', function(req,res) {
 
 
 
+app.get('/', function(req,res) {
+  // Post to localhost:3001
+  // Fetch user input data 
+  let param = req.query.data
+  res.send(getItem(param));
+})
 
 app.listen(PORT, () => {
   console.log('Scraping on port: ' + PORT)
 })
+
+
+
 
 
