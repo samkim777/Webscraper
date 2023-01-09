@@ -22,6 +22,9 @@ async function getItem(item_names) {
   let search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
+
+  var filtered_products = [];
+
   for (let pages = 0; pages < 3; pages++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
@@ -92,7 +95,7 @@ async function getItem(item_names) {
       return products;
     }, products,search_name);
 
-    var filtered_products = grabItemName.filter(function (items) {
+     filtered_products = grabItemName.filter(function (items) {
       return (
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
@@ -117,13 +120,8 @@ async function getItem(item_names) {
  
        console.dir(filtered_products, { maxArrayLength: null });
        
-       // Return filtered list
-       return filtered_products;
-
-      //  app.get('/', function(req,res) {
-      //   // Post to localhost:3001
-      //   res.send(filtered_products);
-      // })
+     
+  
 
        
       
@@ -136,7 +134,10 @@ async function getItem(item_names) {
   
 
   await browser.close();
- 
+
+  // Return filtered list
+  return filtered_products;
+
 }
 
 
