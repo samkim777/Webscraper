@@ -23,9 +23,10 @@ function App() {
 
   const getData = () => {
     axios.get('http://localhost:3001/',{params: {
-      data: value // GET request with user value
+      data: 'keyboard' // GET request with user value
     }},{crossdomain:true}) // Fetching from localhost:3000
-    .then((res) => setProduct(res.data))
+    .then((res) => console.log(res)) 
+    
 
   }
 
@@ -37,7 +38,7 @@ function App() {
   return (
     <div className="products">
          <input type="text" />
-         <button onClick={() => getData(value)}>Search</button>
+         <button onClick={() => getData('book')}>Search</button>
      {product.map(data => <div> {data.Name} + {data.Rating} + {data.Price} </div>)}
   </div>
 

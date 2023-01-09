@@ -117,6 +117,9 @@ async function getItem(item_names) {
  
        console.dir(filtered_products, { maxArrayLength: null });
        
+       // Return filtered list
+       return filtered_products;
+
       //  app.get('/', function(req,res) {
       //   // Post to localhost:3001
       //   res.send(filtered_products);
@@ -146,8 +149,8 @@ async function getItem(item_names) {
 app.get('/', function(req,res) {
   // Post to localhost:3001
   // Fetch user input data 
-  let param = req.query.data
-  res.send(getItem(param));
+  let params = req.query.data
+  res.send(getItem(params));
 })
 
 app.listen(PORT, () => {
