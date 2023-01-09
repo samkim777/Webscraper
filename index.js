@@ -6,18 +6,20 @@ const app = express()
 const PORT = process.env.PORT || 3001;
 const cors = require('cors');
 
+  /// 
+  app.all('/', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+   });
+  ///
 
 
 
 async function getItem(item_names) {
-  /// 
-  // app.use(function(req, res, next) {
-  //   res.header("Access-Control-Allow-Origin", 'http://localhost:3000'); // update to match the domain you will make the request from
-  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  //   next();
-  // });
-  ///
-  app.use(cors())
+
+
+  // app.use(cors())
   
   let search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
@@ -118,7 +120,7 @@ async function getItem(item_names) {
      
 
  
-       console.dir(filtered_products, { maxArrayLength: null });
+      //  console.dir(filtered_products, { maxArrayLength: null });
        
      
   
@@ -135,6 +137,7 @@ async function getItem(item_names) {
 
   await browser.close();
 
+  console.dir(filtered_products, { maxArrayLength: null });
   // Return filtered list
   return filtered_products;
 

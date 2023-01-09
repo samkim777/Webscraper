@@ -28,7 +28,7 @@ function getData() {
 
 
   useEffect(() => {
-    getData()
+    // getData()
    
   }, []);
 
