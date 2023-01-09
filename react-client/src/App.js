@@ -19,16 +19,13 @@ function App() {
 
 
 
-
-
-  const getData = () => {
-    axios.get('http://localhost:3001/',{params: {
+function getData() {
+  axios.get('http://localhost:3001/',{params: {
       data: 'keyboard' // GET request with user value
     }},{crossdomain:true}) // Fetching from localhost:3000
     .then((res) => console.log(res)) 
-    
+}
 
-  }
 
   useEffect(() => {
     getData()
