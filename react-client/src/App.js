@@ -24,6 +24,7 @@ function getData() {
       data: 'keyboard' // GET request with user value
     }},{crossdomain:true}) // Fetching from localhost:3000
     .then((res) => console.log(res)) 
+    // Empty data
 }
 
 
