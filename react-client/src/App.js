@@ -35,7 +35,7 @@ function getData() {
   return (
     <div className="products">
          <input type="text" />
-         <button onClick={() => getData('')}>Search</button>
+         <button onClick={() => getData()}>Search</button>
      {product.map(data => <div> {data.Name} + {data.Rating} + {data.Price} </div>)}
   </div>
 
