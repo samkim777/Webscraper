@@ -150,12 +150,11 @@ async function getItem(item_names) {
 
 
 
-app.get('/', function(req,res) {
-  // Post to localhost:3001
+app.get('/', async function(req,res) {
   // Fetch user input data 
   let params = req.query.data
   // Run the scraper on request
-  let results = getItem(params);
+  let results = await getItem(params);
   // Send scraped JSON
   res.send(results);
 })
