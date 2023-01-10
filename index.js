@@ -154,7 +154,10 @@ app.get('/', function(req,res) {
   // Post to localhost:3001
   // Fetch user input data 
   let params = req.query.data
-  res.send(getItem(params));
+  // Run the scraper on request
+  let results = getItem(params);
+  // Send scraped JSON
+  res.send(results);
 })
 
 app.listen(PORT, () => {
