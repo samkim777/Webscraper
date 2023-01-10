@@ -19,8 +19,8 @@ function App() {
 
 
 
-function getData() {
-  axios.get('http://localhost:3001/',{params: {
+async function getData() {
+  await axios.get('http://localhost:3001/',{params: {
       data: 'keyboard' // GET request with user value
     }},{crossdomain:true}) // Fetching from localhost:3000
     .then((res) => console.log(res)) 
