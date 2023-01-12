@@ -5,16 +5,33 @@ import "./App.css";
 
 
 
-function App() {
 
+function App() {
+  
+  let results = [];
 
   const [product, setProduct] = useState([]);
   
-  const [value, setValue] = useState('');
+  const [status, setStatus] = useState('');
 
-  const onChange = (event) => {
-    setValue(event.target.value);
-  };
+  // const onChange = (event) => {
+  //   setValue(event.target.value);
+  // };
+
+function DataLoaded() {
+  return <div> {Object.entries(product).map(data => data.Name)}</div>
+  
+}
+
+function DataLoading()  {
+  return <h1> Loading... </h1>
+}
+
+function fetchData() {
+  if (product.length == 0) {
+    return <DataLoading/>
+  } else return <DataLoaded/>
+}
 
 
 
@@ -22,9 +39,9 @@ function App() {
 function getData() {
    axios.get('http://localhost:3001/',{params: {
       data: 'keyboard' // GET request with user value
-    }},{crossdomain:true}) // Fetching from localhost:3000
-    .then(res => console.log(res.data)) 
-    // Empty data
+    }},{crossdomain:true}) 
+    .then(res => {console.log(res.data);
+                 setProduct(res)}) 
 }
 
 
@@ -32,6 +49,7 @@ function getData() {
 
   useEffect(() => {
     // getData()
+
    
   }, []);
 
@@ -39,7 +57,7 @@ function getData() {
     <div className="products">
          <input type="text" />
          <button onClick={() => getData()}>Search</button>
-     {product.map(data => <div> {data.Name} + {data.Rating} + {data.Price} </div>)}
+         {fetchData()}
   </div>
 
   );
