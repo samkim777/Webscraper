@@ -19,8 +19,9 @@ function App() {
   // };
 
 function DataLoaded() {
-  return <div> {Object.entries(product).map(data => data.Name)}</div>
-  
+  for (const [key, value] of Object.entries(product)) {
+    console.log(key + ':' + value);
+  }
 }
 
 function DataLoading()  {
@@ -40,8 +41,9 @@ function getData() {
    axios.get('http://localhost:3001/',{params: {
       data: 'keyboard' // GET request with user value
     }},{crossdomain:true}) 
-    .then(res => {console.log(res.data);
-                 setProduct(res)}) 
+    .then(res => {console.log(res);
+                 setProduct(product);
+                 return fetchData()}) 
 }
 
 
@@ -57,7 +59,6 @@ function getData() {
     <div className="products">
          <input type="text" />
          <button onClick={() => getData()}>Search</button>
-         {fetchData()}
   </div>
 
   );
