@@ -20,7 +20,7 @@ function App() {
 
 function DataLoaded() {
   for (const [key, value] of Object.entries(product)) {
-    console.log(key + ':' + value);
+    console.log(value);
   }
 }
 
@@ -42,8 +42,10 @@ function getData() {
       data: 'keyboard' // GET request with user value
     }},{crossdomain:true}) 
     .then(res => {console.log(res);
-                 setProduct(product);
-                 return fetchData()}) 
+                  setProduct(res.data);
+                 }).then(() => {
+                  console.log(product.length)
+                  fetchData();}) 
 }
 
 
@@ -59,6 +61,7 @@ function getData() {
     <div className="products">
          <input type="text" />
          <button onClick={() => getData()}>Search</button>
+         {fetchData()}
   </div>
 
   );
