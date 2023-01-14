@@ -17,9 +17,9 @@ let products = [];
 
 function DataLoaded(product) {
   for (const [key, value] of Object.entries(product)) {
-    console.log(value);
+    console.log(value.Name);
   }
 }
 
-DataLoaded(products);
+DataLoaded(product);
 

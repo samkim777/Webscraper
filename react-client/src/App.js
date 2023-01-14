@@ -20,7 +20,8 @@ function App() {
 
 function DataLoaded() {
   for (const [key, value] of Object.entries(product)) {
-    console.log(value);
+    return <div> <li>{value.Name}</li></div>
+    //@@@ How to display all, not just one?
   }
 }
 
