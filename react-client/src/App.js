@@ -19,10 +19,11 @@ function App() {
   // };
 
 function DataLoaded() {
+  let productList = [];
   for (const [key, value] of Object.entries(product)) {
-    return <div> <li>{value.Name}</li></div>
-    //@@@ How to display all, not just one?
+    productList.push(<div key={key}>{value.Name}</div>)
   }
+  return productList;
 }
 
 function DataLoading()  {
