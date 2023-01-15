@@ -21,7 +21,9 @@ function App() {
 function DataLoaded() {
   let productList = [];
   for (const [key, value] of Object.entries(product)) {
-    productList.push(<div key={key}>{value.Name}</div>)
+    productList.push(<div key={key}><h1>{value.Name}</h1>
+                                    <h1>{value.Price}</h1> 
+                                    <h1>{value.Rating}</h1></div> )
   }
   return productList;
 }
