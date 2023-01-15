@@ -12,11 +12,9 @@ function App() {
 
   const [product, setProduct] = useState([]);
   
-  const [status, setStatus] = useState('');
+  const [input, setInput] = useState('');
 
-  // const onChange = (event) => {
-  //   setValue(event.target.value);
-  // };
+ 
 
 function DataLoaded() {
   let productList = [];
@@ -41,14 +39,14 @@ function fetchData() {
 
 
 
+
 function getData() {
    axios.get('http://localhost:3001/',{params: {
-      data: 'keyboard' // GET request with user value
+      data: input // GET request with user value
     }},{crossdomain:true}) 
     .then(res => {console.log(res);
                   setProduct(res.data);
                  }).then(() => {
-                  console.log(product.length)
                   fetchData();}) 
 }
 
@@ -63,7 +61,7 @@ function getData() {
 
   return (
     <div className="products">
-         <input type="text" />
+         <input type="text" onInput={e => setInput(e.target.value)}/>
          <button onClick={() => getData()}>Search</button>
          {fetchData()}
   </div>
