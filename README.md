@@ -22,4 +22,5 @@ npm start
 ```
 ###### Type in the name of item that you want to search inside the textbox, and press the search button. The scraped and filtered results will be displayed to you shortly.
 
+###### ![](demo.gif)
 
