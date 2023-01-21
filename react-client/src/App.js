@@ -8,7 +8,6 @@ import "./App.css";
 
 function App() {
   
-  let results = [];
 
   const [product, setProduct] = useState([]);
   
