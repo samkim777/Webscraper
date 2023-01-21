@@ -20,10 +20,6 @@ index.js
 cd react-client/src
 npm start
 ```
-###### 2. Type in the name of item that you want to search inside the textbox, and press the search button. The scraped and filtered results will be displayed to you shortly.
+###### Type in the name of item that you want to search inside the textbox, and press the search button. The scraped and filtered results will be displayed to you shortly.
 
-###### 3. Finally, run with the command 
-```
-node index.js
-```
-###### which will log the scraped data in the console.
+
