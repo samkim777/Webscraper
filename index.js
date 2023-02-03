@@ -97,7 +97,7 @@ async function getItem(item_names) {
       return products;
     }, products,search_name);
 
-     filtered_products = grabItemName.filter(function (items) {
+     filtered_products = await grabItemName.filter(function (items) {
       return (
         parseInt(
           items.Rating.substr(18, items.Rating.length).replace(/,/g, "")
