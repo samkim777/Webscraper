@@ -65,7 +65,7 @@ async function getItem(item_names) {
      
       // -> Scoping issues with the varible 'products'
       itemCardFiltered.forEach((tag) => {
-        tag.remove();
+        // tag.remove(); -> Also gets rid of url as well as '\n' 
         let item_name_null =
           tag.querySelector(
             ".a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal"
