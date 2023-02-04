@@ -73,7 +73,7 @@ async function getItem(item_names) {
         let item_price_null = tag.querySelector(".a-price") == null;
         let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
         let item_img_null = tag.querySelector(".s-image").src == null;
-        let item_url_null = tag.querySelector(".a-link-normal.s-no-outline") == null;
+        let item_url_null = tag.querySelector(".a-link-normal.s-no-outline").href == null;
 
         products.push({
           // Ternary operator for when an element is null, else give value
@@ -82,7 +82,7 @@ async function getItem(item_names) {
           : tag.querySelector(".s-image").src,
           Link: item_url_null 
           ? "No url avaliable"
-          : tag.querySelector(".a-link-normal.s-no-outline"),
+          : tag.querySelector(".a-link-normal.s-no-outline").href,
           Name: item_name_null
             ? "No name for this item"
             : tag.querySelector(
