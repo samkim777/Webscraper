@@ -16,11 +16,7 @@ const cors = require('cors');
 
 
 
-async function getItem(item_names) {
-
-
-  // app.use(cors())
-  
+async function getItem(item_names) {  
   let search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
@@ -61,7 +57,6 @@ async function getItem(item_names) {
       const itemCardFiltered = Array.from(itemCard).filter(
         (card) => !card.className.includes("s-shopping-adviser") && !card.innerHTML.includes('Sponsored') 
       
-        //##### Checking if string contains multiple words is bit more complicated
 
 
         //@@@ page.evaluate needs to be passed in a parameter
@@ -77,9 +72,17 @@ async function getItem(item_names) {
           ) == null;
         let item_price_null = tag.querySelector(".a-price") == null;
         let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
+        let item_img_null = tag.querySelector(".s-image").src == null;
+        let item_url_null = tag.querySelector(".a-link-normal.s-no-outline") == null;
 
         products.push({
           // Ternary operator for when an element is null, else give value
+          Image: item_img_null 
+          ? "No image avaliable"
+          : tag.querySelector(".s-image").src,
+          Link: item_url_null 
+          ? "No url avaliable"
+          : tag.querySelector(".a-link-normal.s-no-outline"),
           Name: item_name_null
             ? "No name for this item"
             : tag.querySelector(
@@ -106,7 +109,7 @@ async function getItem(item_names) {
     });
     await page.close(); // Close the scraped page
 
-    //@@@ Sorting algorithm
+    //@@@ Sorting by decreasing rating
     if (j == urls.length - 1) {
       filtered_products.sort(function (a, b) {
         var keyA = parseInt(a.Rating.substr(18, a.length).replace(/,/g, ""));
@@ -115,18 +118,6 @@ async function getItem(item_names) {
         if (keyA < keyB) return 1;
         return 0;
       });
-      
-
-     
-
- 
-      //  console.dir(filtered_products, { maxArrayLength: null });
-       
-     
-  
-
-       
-      
  
     }
   
