@@ -15,7 +15,7 @@
 
 .Item-box {
   color:white;
-  height: 30vh;
+  height: 40vh;
   width: 30vw;
   float:left;
   background-color: black;
@@ -36,6 +36,7 @@
   flex-wrap: wrap;
   justify-content: space-around;
   align-content: center;
+  text-align:center;
 }
 
 .search-button{

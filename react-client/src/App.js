@@ -20,9 +20,9 @@ function DataLoaded() {
   let productList = [];
   for (const [key, value] of Object.entries(product)) {
     productList.push(<div className = 'Item-box' key={key}>
-      <div className="Item-text">   
-                                    <a href={value.Image}><h1>Image</h1></a>
-                                   <a href = {value.Link}><h1>Purchase Link</h1></a>
+      <div className="Item-text" style={{backgroundImage:value.Image}}>   
+                                    <a href ={value.Image}><h1>Image</h1></a>
+                                    <a href = {value.Link}><h1>Purchase Link</h1></a>
                                     <h1>{value.Name}  </h1>
                                     <h1>{value.Price} </h1> 
                                     <h1>{value.Rating}</h1> </div></div> )
