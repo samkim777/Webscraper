@@ -14,7 +14,7 @@
 }
 
 .Item-box {
-  color:aquamarine;
+  color:white;
   height: 30vh;
   width: 30vw;
   float:left;
@@ -23,10 +23,11 @@
   margin-top: 5vh;
   overflow-y: auto;
   
+  
 }
 
 .Item-text{
-  font-size: 10px;
+  font-size: 9px;
   
 }
 
@@ -35,6 +36,11 @@
   flex-wrap: wrap;
   justify-content: space-around;
   align-content: center;
+}
+
+.search-button{
+  text-align: center;
+  margin-top: 10vh;
 }
 
 

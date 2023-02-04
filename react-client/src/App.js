@@ -19,9 +19,11 @@ function DataLoaded() {
   let productList = [];
   for (const [key, value] of Object.entries(product)) {
     productList.push(<div className = 'Item-box' key={key}>
-      <div className="Item-text">
-                                    <h1>{value.Name}</h1>
-                                    <h1>{value.Price}</h1> 
+      <div className="Item-text">   
+                                    <a href={value.Image}/><h1>Link</h1>
+                                    
+                                    <h1>{value.Name}  </h1>
+                                    <h1>{value.Price} </h1> 
                                     <h1>{value.Rating}</h1> </div></div> )
   }
   return productList;
@@ -61,9 +63,12 @@ function getData() {
   }, []);
 
   return (
-    <div className="products">
-         <input type="text" onInput={e => setInput(e.target.value)}/>
-         <button onClick={() => getData()}>Search</button>
+    <div>
+      <div className="search-button"> 
+      <input type="text" onInput={e => setInput(e.target.value)}/>
+      <button onClick={() => getData()}>Search</button>
+                                                        </div>
+         
          <div className="container">{fetchData()}</div>
   </div>
 
