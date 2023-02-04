@@ -47,6 +47,7 @@ async function getItem(item_names) {
 
     await page.waitForSelector(".a-section.a-spacing-base", {
       visible: true,
+      timeout:3000, // Wait 3 seconds for elements
       // Wait for item cards to be loaded
     });
 
