@@ -21,9 +21,9 @@ function DataLoaded() {
   for (const [key, value] of Object.entries(product)) {
     productList.push(<div key={key}>
       <div className="item-image">   
-                                    <img src ={value.Image} alt = {value.Name}></img> </div>
+                                    <img src ={value.Image} alt = {value.Name} ></img> </div>
                                     <div className="Item-box">
-                                    <a href = {value.Link}><h1>Purchase Link</h1></a>
+                                    <a href = {value.Link} target="_blank"><h1>Purchase Link</h1></a>
                                     <h1>{value.Name}  </h1>
                                     <h1>{value.Price} </h1> 
                                     <h1>{value.Rating}</h1> </div>
