@@ -54,4 +54,19 @@
   margin-top: 10vh;
 }
 
+.input{
+  padding: 10px 10px 10px 20px; 
+  min-width: 20vh;
+}
+
+.button{
+  background-color: #FF9900; /* Green */
+  color: black;
+  min-width: 8vh;
+  min-height: 4vh;
+  
+}
+
+
+
 

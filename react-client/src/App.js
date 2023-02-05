@@ -68,8 +68,8 @@ function getData() {
   return (
     <div>
       <div className="search-button"> 
-      <input type="text" onInput={e => setInput(e.target.value)}/>
-      <button onClick={() => getData()}>Search</button>
+      <input className="input" type="text" onInput={e => setInput(e.target.value)}/>
+      <button className="button" onClick={() => getData()}>Search</button>
                                                         </div>
          
          <div className="container">{fetchData()}</div>
