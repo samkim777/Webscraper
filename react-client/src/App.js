@@ -67,6 +67,7 @@ function getData() {
 
   return (
     <div>
+      <div className="title"> Amazon WebScraper (Canada)</div>
       <div className="search-button"> 
       <input className="input" type="text" onInput={e => setInput(e.target.value)}/>
       <button className="button" onClick={() => getData()}>Search</button>
@@ -74,7 +75,7 @@ function getData() {
          
          <div className="container">{fetchData()}</div>
   </div>
-
+      
   );
 }
 
