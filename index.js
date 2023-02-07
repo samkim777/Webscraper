@@ -4,7 +4,7 @@ let products = [];
 const express = require('express');
 const app = express()
 const PORT = process.env.PORT || 3001;
-const cors = require('cors');
+
 
   /// 
   app.all('/', function(req, res, next) {
@@ -20,6 +20,7 @@ async function getItem(item_names) {
   let search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
   let search_name = search_item.replaceAll('+', ' ');
   let urls = [];
+ 
 
   var filtered_products = [];
 
@@ -37,7 +38,9 @@ async function getItem(item_names) {
   const browser = await pupeteer.launch({
     // Launch the pupeteer browser without seeing what the script is doing
     headless: true,
-    executablePath: '/opt/homebrew/bin/chromium' // For M1 chip compatibility issues with puppeteer
+    // executablePath: '/opt/homebrew/bin/chromium' // For M1 chip compatibility issues with puppeteer
+    // perhaps not needed
+ 
   });
 
   for (let j = 0; j < urls.length; j++) {
