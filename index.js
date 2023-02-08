@@ -1,4 +1,3 @@
-const { filter } = require("domutils");
 const pupeteer = require("puppeteer");
 let products = [];
 const express = require('express');
