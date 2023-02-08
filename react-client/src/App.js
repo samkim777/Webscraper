@@ -13,7 +13,6 @@ function App() {
   const [input, setInput] = useState('');
 
  
-
 function DataLoaded() {
   let productList = [];
   for (const [key, value] of Object.entries(product)) {
@@ -60,7 +59,7 @@ function getData() {
   useEffect(() => {
 
 
-   
+
   }, []);
 
   return (
