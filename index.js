@@ -4,6 +4,9 @@ const express = require('express');
 const app = express()
 const PORT = process.env.PORT || 3001;
 
+let search_item = '';
+let search_name = ''; 
+
 
   /// 
   app.all('/', function(req, res, next) {
@@ -16,8 +19,6 @@ const PORT = process.env.PORT || 3001;
 
 
 async function getItem(item_names) { 
-  let search_item = '';
-  let search_name = ''; 
       search_item = item_names.replace(/ /g, "+"); // Replace blank space with a '+' sign
       search_name = search_item.replaceAll('+', ' ');
   let urls = [];
