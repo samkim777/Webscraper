@@ -15,7 +15,7 @@
 ```
 index.js
 ```
-###### Then, launch React with command: 
+###### Then, open a new terminal and launch React with command: 
 ```
 cd react-client/src
 npm start
