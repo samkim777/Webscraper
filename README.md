@@ -4,13 +4,19 @@
 ## Description
 ###### A webscraper for scraping product name, price, rating, and rating sample size. Built with Puppeteer library. Compatible with both Amazon.ca.
 
-###### Items returned will be filtered from descending rating size. That is, items with 10,000 ratings will be shown prior to an item with 9,000 ratings, regardless of their actual rating.
+###### Items returned will be filtered from highest ratings to lowest ratings. Since > 200 sample size condition will be met by all the items, it seems fitting that higher ratings hold more value. 
 
 ###### Reviews are mostly J-shaped, meaning consumers either *hate* or *love* the product. This means that if an item is a happy purchase for many, chances are you'll like it too.
 
 ###### Users decide what they want to search for, and how many pages to scrap can be found inside index.js
 
 ## How to use
+
+###### 0. Install dependencies using:
+```
+npm install
+```
+
 ###### 1. First, run index.js inside terminal. 
 ```
 index.js
