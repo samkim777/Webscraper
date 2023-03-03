@@ -28,7 +28,7 @@ async function getItem(item_names) {
 
   var filtered_products = [];
 
-  for (let pages = 0; pages < 2; pages++) {
+  for (let pages = 0; pages < 4; pages++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
@@ -88,6 +88,7 @@ async function getItem(item_names) {
         let item_url_null = tag.querySelector(".a-link-normal.s-no-outline").href == null;
         let rating_length = tag.querySelector(".a-row.a-size-small").innerText.length;
 
+        try {
         products.push({
           // Ternary operator for when an element is null, else give value
           Image: item_img_null 
@@ -103,30 +104,35 @@ async function getItem(item_names) {
               ).innerText,
           Rating: item_rating_null
             ? "No rating for this item"
-            : tag.querySelector(".a-row.a-size-small").innerText.substr(3,rating_length), // Get rid of dup rating ie 4.74.8 out of 5
+            : /\d/.test(tag.querySelector(".a-row.a-size-small").innerText) ? 
+            tag.querySelector(".a-row.a-size-small").innerText.substr(3,rating_length) : // Get rid of dup rating ie 4.74.8 out of 5
+            "Wrong string for this item",
           Price: item_price_null
             ? "No price for this item"
             : // Get rid of duplicate prices with firstChild
               tag.querySelector(".a-price").firstChild.innerText,
-        });
+        })} catch {
+
+        };
       });
 
 
       return products;
     }, products,search_name);
 
-    
+    try{
      filtered_products =  grabItemName.filter(function (items) {
+      console.dir(grabItemName, {maxArrayLength:null});
       return (
         parseInt(
           items.Rating.match(/\(([\d,]+)\)/)[1].replace(/,/g, '')
         ) >= 200 && parseFloat(items.Rating.substr(0,3)) >= 4 
       )
-    });
+    })} catch{};
 
    
 
-    await page.close(); // Close the scraped page
+     await page.close(); // Close the scraped page
 
     //@@@ Sorting by decreasing rating
     if (j == urls.length - 1) {
@@ -144,7 +150,7 @@ async function getItem(item_names) {
 
   }
   
-  await browser.close();
+   await browser.close();
 
   console.dir(filtered_products, { maxArrayLength: null });
   // Return filtered list
