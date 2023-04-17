@@ -28,7 +28,7 @@ async function getItem(item_names) {
 
   var filtered_products = [];
 
-  for (let pages = 0; pages < 4; pages++) {
+  for (let pages = 0; pages < 2; pages++) {
     urls.push(
       "https://www.amazon.ca/s?k=" +
         search_item +
@@ -60,7 +60,8 @@ async function getItem(item_names) {
       timeout:500000, // Wait 50 seconds for elements
       // Wait for item cards to be loaded
     });
-
+    
+    // ****
     const grabItemName = await page.evaluate((products,search_name) => {
       const itemCard = document.querySelectorAll(".a-section.a-spacing-base");
 
@@ -74,7 +75,7 @@ async function getItem(item_names) {
         //@@@ page.evaluate needs to be passed in a parameter
         
       );
-     
+     // NULL CHECKING ---------------------------------
       // -> Scoping issues with the varible 'products'
       itemCardFiltered.forEach((tag) => {
        // tag.remove(); // -> Also gets rid of url as well as '\n' 
@@ -84,7 +85,8 @@ async function getItem(item_names) {
           ) == null;
         let item_price_null = tag.querySelector(".a-price") == null;
         let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
-        let item_img_null = tag.querySelector(".s-image").src == null;
+        let item_img_null = tag.querySelector(".s-image") == null || tag.querySelector(".s-image").src == null;
+
         let item_url_null = tag.querySelector(".a-link-normal.s-no-outline").href == null;
         let rating_length = tag.querySelector(".a-row.a-size-small").innerText.length;
 

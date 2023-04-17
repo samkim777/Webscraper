@@ -16,7 +16,7 @@
     "cors": "^2.8.5",
     "domutils": "^3.0.1",
     "express": "^4.18.2",
-    "puppeteer": "^19.7.1",
+    "puppeteer": "^19.9.0",
     "react": "^18.2.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",

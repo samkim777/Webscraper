@@ -44,14 +44,21 @@ function fetchData() {
 
 
 function getData() {
-   axios.get('http://localhost:3001/',{params: {
-      data: input // GET request with user value
-    }},{crossdomain:true}) 
-    .then(res => {console.log(res);
-                  setProduct(res.data);
-                 }).then(() => {
-                  fetchData();}) 
+  axios.get('http://localhost:3001/', {
+    params: {
+      data: input
+    },
+    crossdomain: true // pass the crossdomain property as part of the second parameter
+  })
+  .then(res => {
+    console.log(res);
+    setProduct(res.data);
+  })
+  .then(() => {
+    fetchData();
+  });
 }
+
 
 
 
