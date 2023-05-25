@@ -1,6 +1,7 @@
 const pupeteer = require("puppeteer");
 let products = [];
 const express = require('express');
+const { filter } = require("domutils");
 const app = express()
 const PORT = process.env.PORT || 3001;
 let search_item = '';
@@ -86,9 +87,8 @@ async function getItem(item_names) {
         let item_price_null = tag.querySelector(".a-price") == null;
         let item_rating_null = tag.querySelector(".a-row.a-size-small") == null;
         let item_img_null = tag.querySelector(".s-image") == null || tag.querySelector(".s-image").src == null;
-
         let item_url_null = tag.querySelector(".a-link-normal.s-no-outline").href == null;
-        let rating_length = tag.querySelector(".a-row.a-size-small").innerText.length;
+        let rating_length = tag.querySelector(".a-row.a-size-small");
 
         try {
         products.push({
@@ -107,7 +107,7 @@ async function getItem(item_names) {
           Rating: item_rating_null
             ? "No rating for this item"
             : /\d/.test(tag.querySelector(".a-row.a-size-small").innerText) ? 
-            tag.querySelector(".a-row.a-size-small").innerText.substr(3,rating_length) : // Get rid of dup rating ie 4.74.8 out of 5
+            tag.querySelector(".a-row.a-size-small").innerText.substr(0,rating_length.innerText.length) : // Get rid of dup rating ie 4.74.8 out of 5
             "Wrong string for this item",
           Price: item_price_null
             ? "No price for this item"
@@ -122,21 +122,19 @@ async function getItem(item_names) {
       return products;
     }, products,search_name);
 
-    try{
+
      filtered_products =  grabItemName.filter(function (items) {
-      console.dir(grabItemName, {maxArrayLength:null});
       return (
-        parseInt(
-          items.Rating.match(/\(([\d,]+)\)/)[1].replace(/,/g, '')
-        ) >= 200 && parseFloat(items.Rating.substr(0,3)) >= 4 
+        parseInt(items.Rating.match(/\d+$/)) >= 200 && parseFloat(items.Rating) >= 4 
       )
-    })} catch{};
+    })
+
 
    
 
-     await page.close(); // Close the scraped page
+    //  await page.close(); // Close the scraped page
 
-    //@@@ Sorting by decreasing rating
+    // //@@@ Sorting by decreasing rating
     if (j == urls.length - 1) {
       filtered_products.sort(function (a, b) {
         var keyA = parseFloat(a.Rating.substr(0, 4).replace(/,/g, ""));
@@ -159,6 +157,8 @@ async function getItem(item_names) {
   return filtered_products;
 
 }
+// Why is it returning an empty list at the end?
+// Rating not showing the rating properly
 
 
 
@@ -174,8 +174,3 @@ app.get('/', async function(req,res) {
 app.listen(PORT, () => {
   console.log('Scraping on port: ' + PORT)
 })
-
-
-
-
-
