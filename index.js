@@ -163,12 +163,18 @@ async function getItem(item_names) {
 
 
 app.get('/', async function(req,res) {
+  try{
   // Fetch user input data 
   let params = req.query.data
   // Run the scraper on request
   let results = await getItem(params);
   // Send scraped JSON
   res.send(results);
+  }
+  catch (error){
+    console.error(error)
+    res.status(500).json({error: 'An Error occured'})
+  }
 })
 
 app.listen(PORT, () => {
