@@ -13,8 +13,7 @@ app.use((req, res, next) => {
 async function getItem(itemNames) {
   const searchItem = itemNames.trim().replace(/ /g, "+");
   const urls = [
-    `https://www.amazon.ca/s?k=${searchItem}&page=1`,
-    `https://www.amazon.ca/s?k=${searchItem}&page=2`
+    `https://www.amazon.ca/s?k=${searchItem}&page=1`
   ];
 
   const browser = await puppeteer.launch({ headless: false });
