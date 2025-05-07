@@ -31,7 +31,7 @@ async function getItem(itemNames) {
           .filter(card => !card.innerHTML.includes("Sponsored"))
           .map(card => {
             const nameEl = card.querySelector("h2 a span") || card.querySelector("h2 span");
-            const urlEl = card.querySelector("a.a-link-normal.s-line-clamp-4.s-link-style.a-text-normal");
+            const urlEl = card.querySelector("h2 a") || card.querySelector("a.a-link-normal");
             const imgEl = card.querySelector(".s-image");
             const ratingEl = card.querySelector(".a-icon-alt");
             const priceWholeEl = card.querySelector(".a-price .a-price-whole");
