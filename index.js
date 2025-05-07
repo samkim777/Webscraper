@@ -45,7 +45,7 @@ async function getItem(itemNames) {
 
             return {
               Image: imgEl?.src || "No image available",
-              Link: urlEl?.href ? (urlEl.href.startsWith("http") ? urlEl.href : `https://www.amazon.ca${urlEl.getAttribute("href")}`) : "No url available",
+              Link: urlEl?.href ? `https://www.amazon.ca${urlEl.getAttribute("href")}` : "No url available",
               Name: nameEl?.innerText || "No name for this item",
               Rating: ratingEl?.innerText || "No rating for this item",
               Price: price
@@ -60,7 +60,7 @@ async function getItem(itemNames) {
     }
   }
 
-  // browser.close() intentionally removed so browser stays open
+  browser.close();
 
   const filteredProducts = products.filter(p => {
     const starMatch = p.Rating.match(/\d+(\.\d+)?/);
@@ -74,16 +74,16 @@ async function getItem(itemNames) {
     return bStars - aStars;
   });
 
-  fs.writeFileSync("test.json", JSON.stringify(filteredProducts, null, 2), "utf-8");
-  console.log("Results written to test.json");
+  // We only want first 6 items for each suggested gift
+  let aResult = filteredProducts.slice(0, 5);
 
-  console.dir(filteredProducts, { maxArrayLength: null });
-  return filteredProducts;
+  fs.writeFileSync("test.json", JSON.stringify(aResult, null, 2), "utf-8");
+
+  // console.dir(filteredProducts, { maxArrayLength: null });
+  return aResult;
 }
+module.exports = { getItem };
 
 // Directly call getItem with "Pen" on startup
-getItem("Pen");
+// getItem("Pen");
 
-app.listen(PORT, () => {
-  console.log(`Scraping on port: ${PORT}`);
-});

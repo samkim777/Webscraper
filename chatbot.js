@@ -1,16 +1,19 @@
 const OpenAI = require("openai");
-require('dotenv').config();
+const { getItem } = require("./index");
+require("dotenv").config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const completion = openai.chat.completions.create({
-  model: "gpt-4o-mini",
-  store: true,
-  messages: [
-    {
-      "role": "system", "content": `You are a shopping assistant that helps users find items to purchase from amazon.ca.
+async function getSuggestions() {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    store: true,
+    messages: [
+      {
+        role: "system",
+        content: `You are a shopping assistant that helps users find items to purchase from amazon.ca.
 Your job is to suggest 10 gift or item ideas based on the user's prompt.
 
 Only respond to messages that are related to shopping or buying products.
@@ -25,9 +28,37 @@ Example format:
   "Item Name 1": "Description of item 1",
   "Item Name 2": "Description of item 2"
 }
-Do not include any explanation, commentary, or text outside the JSON object.`},
-    { "role": "user", "content": "Give me suggestions on what gift to get for my mother for mother's day" },
-  ],
-});
+Do not include any explanation, commentary, or text outside the JSON object.`,
+      },
+      {
+        role: "user",
+        content: "Give me suggestions on what gift to get for my mother for Mother's Day",
+      },
+    ],
+  });
 
-completion.then((result) => console.log(result.choices[0].message.content));
+  let responseText = completion.choices[0].message.content;
+  let response;
+
+  try {
+    response = JSON.parse(responseText);
+  } catch (err) {
+    console.error("❌ Failed to parse GPT response as JSON:", err);
+    console.log("🔍 Raw response:", responseText);
+    return;
+  }
+
+  const sItemNames = Object.keys(response);
+
+  for (const itemName of sItemNames.slice(0, 5)) { // Limit to 5 to test
+    console.log(`🔎 Searching for: ${itemName}`);
+    try {
+      const products = await getItem(itemName);
+      console.log(`🛍️ Found ${products.length} products for "${itemName}":`);
+      console.log(products.slice(0, 2)); // print first 2 products
+    } catch (scrapeErr) {
+      console.error(`❌ Error scraping for "${itemName}":`, scrapeErr.message);
+    }
+  }
+}
+getSuggestions();
