@@ -8,7 +8,7 @@ const openai = new OpenAI({
 
 async function getSuggestions(sPrompt) {
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-3.5-turbo",
     store: true,
     messages: [
       {
@@ -50,7 +50,7 @@ Do not include any explanation, commentary, or text outside the JSON object.`,
 
   const sItemNames = Object.keys(response);
   let aResults = [];
-  for (const itemName of sItemNames.slice(0, 5)) { // Limit to 5 to test
+  for (const itemName of sItemNames) {
     console.log(`🔎 Searching for: ${itemName}`);
     try {
       const products = await getItem(itemName);

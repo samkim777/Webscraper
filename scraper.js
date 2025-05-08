@@ -83,8 +83,8 @@ async function getItem(itemNames) {
   // Sort by rating (descending)
   filteredProducts.sort((a, b) => b.Rating - a.Rating);
 
-  // Limit to first 6 results
-  const aResult = filteredProducts.slice(0, 6);
+  // Limit to first 10 results
+  const aResult = filteredProducts.slice(0, 10);
 
   // For testing purposes
   fs.writeFileSync("test.json", JSON.stringify(aResult, null, 2), "utf-8");
