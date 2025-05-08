@@ -1,85 +1,55 @@
-import React from "react";
-import {useState,useEffect} from 'react';
-import axios from "axios";
-import "./App.css";
-
-
+import { useState } from "react";
+import PromptInput from "./components/PromptInput";
 
 function App() {
-  
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [product, setProduct] = useState([]);
-  
-  const [input, setInput] = useState('');
-
- 
-function DataLoaded() {
-  let productList = [];
-  for (const [key, value] of Object.entries(product)) {
-    productList.push(<div key={key}>
-      <div className="item-image">   
-                                    <img src ={value.Image} alt = {value.Name} ></img> </div>
-                                    <div className="Item-box">
-                                    <a href = {value.Link} target="_blank"><h1>Purchase Link</h1></a>
-                                    <h1>{value.Name}  </h1>
-                                    <h1>{value.Price} </h1> 
-                                    <h1>{value.Rating}</h1> </div>
-                                    </div>)
-  }
-  return productList;
-}
-
-function DataLoading()  {
-  return <h1> Loading... </h1>
-}
-
-function fetchData() {
-  if (product.length == 0) {
-    return <DataLoading/>
-  } else return <DataLoaded/>
-}
-
-
-
-
-
-function getData() {
-  axios.get('http://localhost:3001/', {
-    params: {
-      data: input
-    },
-    crossdomain: true // pass the crossdomain property as part of the second parameter
-  })
-  .then(res => {
-    console.log(res);
-    setProduct(res.data);
-  })
-  .then(() => {
-    fetchData();
-  });
-}
-
-
-
-
-
-  useEffect(() => {
-
-
-
-  }, []);
+  const handlePromptSubmit = async (input) => {
+    setLoading(true);
+    setResults([]);
+    try {
+      const res = await fetch("http://localhost:3001/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: input }),
+      });
+      const data = await res.json();
+      setResults(data.suggestions); // <- now shows up in the UI
+    } catch (err) {
+      console.error("❌ Failed to fetch:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div>
-      <div className="title"> Amazon WebScraper (Canada)</div>
-      <div className="search-button"> 
-      <input className="input" type="text" onInput={e => setInput(e.target.value)}/>
-      <button className="button" onClick={() => getData()}>Search</button>
-                                                        </div>
-         
-         <div className="container">{fetchData()}</div>
-  </div>
-      
+    <div className="max-w-2xl mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4 text-center">🛍️ AI Shopping Assistant For Amazon</h1>
+      <PromptInput onSubmit={handlePromptSubmit} />
+      {loading && <p>Loading suggestions...</p>}
+
+      {results.map((suggestion, i) => (
+        <div key={i} className="border p-4 my-4 rounded shadow">
+          <h2 className="text-xl font-bold mb-1">{suggestion.name}</h2>
+          <p className="text-gray-600 mb-3">{suggestion.description}</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {suggestion.products.map((product, j) => (
+              <div key={j} className="border p-2 rounded shadow hover:shadow-lg">
+                <img src={product.Image} alt={product.Name} className="h-32 object-contain mb-2 mx-auto" />
+                <p className="font-medium text-sm">{product.Name}</p>
+                <p className="text-green-600 text-sm">{product.Price}</p>
+                <p className="text-yellow-600 text-xs">{product.Rating}</p>
+                <a href={product.Link} target="_blank" rel="noreferrer" className="text-blue-600 text-sm underline block mt-1">
+                  View on Amazon
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 

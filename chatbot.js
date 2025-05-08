@@ -1,12 +1,12 @@
 const OpenAI = require("openai");
-const { getItem } = require("./index");
+const { getItem } = require("./scraper");
 require("dotenv").config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function getSuggestions() {
+async function getSuggestions(sPrompt) {
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     store: true,
@@ -32,7 +32,7 @@ Do not include any explanation, commentary, or text outside the JSON object.`,
       },
       {
         role: "user",
-        content: "Give me suggestions on what gift to get for my mother for Mother's Day",
+        content: sPrompt,
       },
     ],
   });
@@ -49,16 +49,23 @@ Do not include any explanation, commentary, or text outside the JSON object.`,
   }
 
   const sItemNames = Object.keys(response);
-
+  let aResults = [];
   for (const itemName of sItemNames.slice(0, 5)) { // Limit to 5 to test
     console.log(`🔎 Searching for: ${itemName}`);
     try {
       const products = await getItem(itemName);
       console.log(`🛍️ Found ${products.length} products for "${itemName}":`);
-      console.log(products.slice(0, 2)); // print first 2 products
+      aResults.push({
+        name: itemName,
+        description: response[itemName],
+        products
+      });
     } catch (scrapeErr) {
       console.error(`❌ Error scraping for "${itemName}":`, scrapeErr.message);
     }
   }
+  return aResults;
 }
-getSuggestions();
+// getSuggestions();
+
+module.exports = { getSuggestions }
