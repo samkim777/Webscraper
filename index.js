@@ -6,7 +6,12 @@ const { getSuggestions } = require("./chatbot");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://webscraper-zeta.vercel.app',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
 app.use(bodyParser.json());
 
 app.post("/generate", async (req, res) => {
