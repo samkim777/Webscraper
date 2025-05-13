@@ -6,12 +6,13 @@ import SuggestionCard from "./components/SuggestionCard";
 function App() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const SERVER_URL = process.env.REACT_APP_API_URL;
 
   const handlePromptSubmit = async (input) => {
     setLoading(true);
     setResults([]);
     try {
-      const res = await fetch("http://localhost:3001/generate", {
+      const res = await fetch(`${SERVER_URL}/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input }),
