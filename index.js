@@ -17,7 +17,7 @@ app.post("/generate", async (req, res) => {
   }
 
   try {
-    const suggestions = await getSuggestions(prompt); // You’ll modify chatbot.js to accept the prompt
+    const suggestions = await getSuggestions(prompt);
     res.json({ suggestions });
   } catch (err) {
     console.error("Error:", err);
