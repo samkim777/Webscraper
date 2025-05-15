@@ -13,7 +13,7 @@ export default function PromptInput({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit} className="mb-6">
-      <input
+      <textarea
         type="text"
         placeholder="What are you shopping for?"
         value={input}

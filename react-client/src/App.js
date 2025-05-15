@@ -18,7 +18,7 @@ function App() {
         body: JSON.stringify({ prompt: input }),
       });
       const data = await res.json();
-      setResults(data.suggestions); // <- now shows up in the UI
+      setResults(data.suggestions);
     } catch (err) {
       console.error("❌ Failed to fetch:", err);
     } finally {
