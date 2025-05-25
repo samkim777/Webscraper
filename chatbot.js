@@ -28,7 +28,7 @@ Example format:
   "Item Name 1": "Description of item 1",
   "Item Name 2": "Description of item 2"
 }
-Do not include any explanation, commentary, or text outside the JSON object.`,
+Do not include any explanation, commentary, or text outside the JSON object. Each entry MUST be separated by a comma. The response MUST be valid JSON.`,
       },
       {
         role: "user",

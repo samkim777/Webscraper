@@ -7,7 +7,6 @@ export default function PromptInput({ onSubmit }) {
     e.preventDefault();
     if (input.trim()) {
       onSubmit(input);
-      setInput("");
     }
   };
 
