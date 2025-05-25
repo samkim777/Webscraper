@@ -11,7 +11,14 @@ app.use((req, res, next) => {
 });
 
 async function getItem(aItemNames) {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--disable-gpu",
+      "--hide-scrollbars",
+      "--mute-audio"
+    ]
+  });
   const oResults = {};
 
   for (let i = 0; i < aItemNames.length; i += 3) {
@@ -84,22 +91,22 @@ async function getItem(aItemNames) {
   }
 
   await browser.close();
-  
+
   // For testing purposes
   fs.writeFileSync("test.json", JSON.stringify(oResults, null, 2), "utf-8");
 
   return oResults;
 }
-getItem([
-  "Soccer Backpack",
-  "Soccer Training Cones",
-  "Soccer Ball",
-  "Soccer Trainer",
-  "Soccer Cleats",
-  "Soccer Rebounder Net",
-  "Agility Ladder",
-  "Sports Water Bottle",
-  "Soccer Shin Guards",
-  "Soccer Training Bibs"]
-)
+// getItem([
+//   "Soccer Backpack",
+//   "Soccer Training Cones",
+//   "Soccer Ball",
+//   "Soccer Trainer",
+//   "Soccer Cleats",
+//   "Soccer Rebounder Net",
+//   "Agility Ladder",
+//   "Sports Water Bottle",
+//   "Soccer Shin Guards",
+//   "Soccer Training Bibs"]
+// )
 module.exports = { getItem };

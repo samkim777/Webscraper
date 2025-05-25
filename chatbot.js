@@ -48,24 +48,24 @@ Do not include any explanation, commentary, or text outside the JSON object. Eac
     return;
   }
 
-  const sItemNames = Object.keys(response);
+  const sItemNames = Object.keys(response); // ["Item 1", "Item 2", ...]
   let aResults = [];
-  for (const itemName of sItemNames) {
-    console.log(`🔎 Searching for: ${itemName}`);
-    try {
-      const products = await getItem(itemName);
-      console.log(`🛍️ Found ${products.length} products for "${itemName}":`);
+
+  try {
+    const oScrapedResults = await getItem(sItemNames); // { "Item 1": [...], "Item 2": [...] }
+
+    for (const sItemName of sItemNames) {
       aResults.push({
-        name: itemName,
-        description: response[itemName],
-        products
+        name: sItemName,
+        description: response[sItemName],
+        products: oScrapedResults[sItemName] || []
       });
-    } catch (scrapeErr) {
-      console.error(`❌ Error scraping for "${itemName}":`, scrapeErr.message);
     }
+  } catch (err) {
+    console.error("❌ Failed during scraping:", err.message);
   }
+
   return aResults;
 }
-// getSuggestions();
 
-module.exports = { getSuggestions }
+module.exports = { getSuggestions };
