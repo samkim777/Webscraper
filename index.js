@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: 'https://webscraper-zeta.vercel.app',
+  origin: 'https://webscraper-h3ydqix3m-sam34.vercel.app',
   methods: ['GET', 'POST'],
   credentials: true
 }));
