@@ -12,13 +12,13 @@ function App() {
     setLoading(true);
     setResults([]);
     try {
-      const res = await fetch(`${SERVER_URL}/generate`, {
+      const res = await fetch(`http://localhost:3001/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input }),
       });
       const data = await res.json();
-      setResults(data.suggestions); // <- now shows up in the UI
+      setResults(data.suggestions);
     } catch (err) {
       console.error("❌ Failed to fetch:", err);
     } finally {
