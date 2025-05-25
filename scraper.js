@@ -91,10 +91,6 @@ async function getItem(aItemNames) {
   }
 
   await browser.close();
-
-  // For testing purposes
-  fs.writeFileSync("test.json", JSON.stringify(oResults, null, 2), "utf-8");
-
   return oResults;
 }
 // getItem([
