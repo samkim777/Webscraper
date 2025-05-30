@@ -16,20 +16,20 @@ async function getItem(aItemNames) {
     args: [
       "--disable-gpu",
       "--hide-scrollbars",
-      "--mute-audio"
+      "--mute-audio",
+      "--disable-background-video-track"
     ]
   });
   const oResults = {};
+  const aBatchPages = await Promise.all([browser.newPage(), browser.newPage(), browser.newPage()]);
 
   for (let i = 0; i < aItemNames.length; i += 3) {
     const aItemNameBatch = aItemNames.slice(i, i + 3);
-    // Create a new page for each item inside the SAME browser
-    const aBatchPages = await Promise.all(aItemNameBatch.map(() => browser.newPage()));
 
     await Promise.all(aItemNameBatch.map(async (oItem, iIndex) => {
+      const page = aBatchPages[iIndex];
       const searchItem = oItem.trim().replace(/ /g, "+");
       const url = `https://www.amazon.ca/s?k=${searchItem}&page=1`;
-      const page = aBatchPages[iIndex];
 
       try {
         await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -50,7 +50,7 @@ async function getItem(aItemNames) {
                 ? parseFloat(ratingSpan.innerText.match(/[\d.]+/)[0])
                 : 0;
 
-              const reviewAnchor = ratingRow?.querySelector("a[aria-label$='ratings']");
+              const reviewAnchor = card.querySelector("span[aria-label$='ratings']") || card.querySelector("a[href*='#customerReviews']");
               const reviews = reviewAnchor?.getAttribute("aria-label")?.match(/\d+/)
                 ? parseInt(reviewAnchor.getAttribute("aria-label").replace(/,/g, ""), 10)
                 : 0;
@@ -84,29 +84,28 @@ async function getItem(aItemNames) {
       } catch (err) {
         console.error(`Error scraping ${url}:`, err);
         oResults[oItem] = [];
-      } finally {
-        await page.close();
       }
     }));
   }
 
+  await Promise.all(aBatchPages.map(p => p.close()));
   await browser.close();
 
-  // For testing purposes
-  fs.writeFileSync("test.json", JSON.stringify(oResults, null, 2), "utf-8");
+  //fs.writeFileSync("test.json", JSON.stringify(oResults, null, 2), "utf-8");
 
   return oResults;
 }
 // getItem([
-//   "Soccer Backpack",
-//   "Soccer Training Cones",
 //   "Soccer Ball",
-//   "Soccer Trainer",
+//   "Soccer Backpack",
 //   "Soccer Cleats",
-//   "Soccer Rebounder Net",
 //   "Agility Ladder",
-//   "Sports Water Bottle",
+//   "Soccer Trainer",
+//   "Soccer Rebounder Net",
+//   "Soccer Goal Set",
 //   "Soccer Shin Guards",
-//   "Soccer Training Bibs"]
-// )
+//   "Soccer Jersey",
+//   "Sports Water Bottle"
+// ]
+// );
 module.exports = { getItem };
