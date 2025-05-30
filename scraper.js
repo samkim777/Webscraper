@@ -21,7 +21,10 @@ async function getItem(aItemNames) {
     ]
   });
   const oResults = {};
-  const aBatchPages = await Promise.all([browser.newPage(), browser.newPage(), browser.newPage()]);
+  const aBatchPages = [];
+  for (let i = 0; i < 3; i++) {
+    aBatchPages.push(await browser.newPage());
+  }
 
   for (let i = 0; i < aItemNames.length; i += 3) {
     const aItemNameBatch = aItemNames.slice(i, i + 3);
@@ -88,7 +91,6 @@ async function getItem(aItemNames) {
     }));
   }
 
-  await Promise.all(aBatchPages.map(p => p.close()));
   await browser.close();
   //fs.writeFileSync("test.json", JSON.stringify(oResults, null, 2), "utf-8");
   return oResults;
