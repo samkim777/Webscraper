@@ -50,7 +50,7 @@ async function getItem(aItemNames) {
                 ? parseFloat(ratingSpan.innerText.match(/[\d.]+/)[0])
                 : 0;
 
-              const reviewAnchor = card.querySelector("span[aria-label$='ratings']") || card.querySelector("a[href*='#customerReviews']");
+              const reviewAnchor = card.querySelector("span[aria-label$='ratings']");
               const reviews = reviewAnchor?.getAttribute("aria-label")?.match(/\d+/)
                 ? parseInt(reviewAnchor.getAttribute("aria-label").replace(/,/g, ""), 10)
                 : 0;
