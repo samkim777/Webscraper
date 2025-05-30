@@ -88,6 +88,7 @@ async function getItem(aItemNames) {
     }));
   }
 
+  await Promise.all(aBatchPages.map(p => p.close()));
   await browser.close();
   //fs.writeFileSync("test.json", JSON.stringify(oResults, null, 2), "utf-8");
   return oResults;
