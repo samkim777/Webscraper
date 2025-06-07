@@ -11,23 +11,8 @@
 ###### Users decide what they want to search for, and how many pages to scrap can be found inside index.js
 
 ## How to use
+Go to https://webscraper-zeta.vercel.app/
 
-###### 0. Install dependencies using:
-```
-npm install
-```
+In the search box, search as you would ask ChatGPT. The more context you provide for whom the gift is for, the better the accuracy.
 
-###### 1. First, run index.js inside terminal. 
-```
-index.js
-```
-###### Then, open a new terminal and launch React with command: 
-```
-cd react-client/src
-npm start
-```
-###### Type in the name of item that you want to search inside the textbox, and press the search button. The scraped and filtered results will be displayed to you shortly.
-
-
-
-###### ![](demo.gif)
+Because the server is deployed on a free instance on Render and the physical location of the server, it takes a couple minutes to finish
