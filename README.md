@@ -14,4 +14,4 @@ Go to https://webscraper-zeta.vercel.app/
 
 In the search box, search as you would ask ChatGPT. The more context you provide for whom the gift is for, the better the accuracy.
 
-Because the server is deployed on a free instance on Render and the physical location of the server, it takes a couple minutes to finish
+Because the server is deployed on a free instance on Render and due to the physical location of the server, it takes a couple minutes to finish
