@@ -8,7 +8,6 @@
 
 ###### Reviews are mostly J-shaped, meaning consumers either *hate* or *love* the product. This means that if an item is a happy purchase for many, chances are you'll like it too.
 
-###### Users decide what they want to search for, and how many pages to scrap can be found inside index.js
 
 ## How to use
 Go to https://webscraper-zeta.vercel.app/
